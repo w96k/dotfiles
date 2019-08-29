@@ -30,9 +30,11 @@ packages do.
 
 ** Install
 
-#BEGIN_SRC
+   You need GNU Stow & Git installed
+
+#+BEGIN_SRC bash
 git clone <this_repo>
 cd <this_repo>
 
-stow <dir>
-#END_SRC
+stow <dir> -t ~
+#+END_SRC
