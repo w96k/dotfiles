@@ -38,6 +38,7 @@
   (append
    (map specification->package
         '(
+          "curl"
           "ratpoison"
           "stumpwm"
           "i3-wm"
