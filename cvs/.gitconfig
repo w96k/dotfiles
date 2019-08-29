@@ -1,0 +1,16 @@
+[credential]
+	helper = cache
+[user]
+	name = Mikhail Kirillov
+	email = w96k.ru@gmail.com
+[gpg]
+	program = gpg2
+[github]
+	user = w96k
+[color]
+	ui = auto
+[sendemail]
+	smtpEncryption = tls
+	smtpServer = smtp.gmail.com
+	smtpUser = w96k.ru@gmail.com
+	smtpServerPort = 587
