@@ -15,7 +15,7 @@ export PATH=$PATH:/nix/var/nix/profiles/default/bin/
 export GUIX_PACKAGE_PATH=~/.guix-packages
 
 # Proxy
-export http_proxy=http://127.0.0.1:9050/
+export http_proxy=socks5://127.0.0.1:9050
 export https_proxy=$http_proxy
 
 setxkbmap -layout us,ru -option grp:caps_toggle
