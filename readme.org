@@ -1,0 +1,38 @@
+* Dotfiles
+Here you can find my dotfiles for various of unix programs.
+
+** GUIX
+   I use guixsd as my primary linux distro. It's GNU (totally libre),
+   extensible by GNU/Guile & based on nix package manager. Nix is the
+   future of package management.
+
+   [[config.scm][My config]]
+
+** Emacs
+[[emacs.png]]
+
+*** My setup
+| Font  | terminus                    |
+| Theme | sanityinc-tomorrow-eighties |
+
+
+| use-package            | Package management                         |
+| ivy                    | Autocomplete tool (search, find-file, M-x) |
+| aggressive indent mode | Auto formatting for code                   |
+| magit                  | Git frontend                               |
+| org-mode               | Mode for writing documents & more          |
+| exwm                   | Window manager within emacs                |
+| flycheck               | Spot code errors on the fly                |
+| powerline              |                                            |
+
+And many more! I left comments in my config, so you can get idea what
+packages do.
+
+** Install
+
+#BEGIN_SRC
+git clone <this_repo>
+cd <this_repo>
+
+stow <dir>
+#END_SRC
