@@ -84,6 +84,7 @@
 ;;; Bullets for org-mode
 (use-package org-bullets
   :ensure t
+  :if window-system
   :commands org-bullets-mode
   :hook (org-mode . org-bullets-mode))
 
@@ -92,18 +93,17 @@
 
 ;;; Easy undo system
 (use-package undo-tree
- :after general
- :commands
- (global-undo-tree-mode)
- :init
- (setq
-  undo-tree-visualizer-timestamps t
-  undo-tree-enable-undo-in-region nil
-  undo-tree-history-directory-alist
-  `(("." . ,(expand-file-name "undo" user-emacs-directory))))
- :config
- (global-undo-tree-mode)
- :diminish undo-tree-mode)
+  :commands
+  (global-undo-tree-mode)
+  :init
+  (setq
+   undo-tree-visualizer-timestamps t
+   undo-tree-enable-undo-in-region nil
+   undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name "undo" user-emacs-directory))))
+  :config
+  (global-undo-tree-mode)
+  :diminish undo-tree-mode)
 
 ;;; Jump to defenition
 (use-package dumb-jump
@@ -354,6 +354,7 @@
 
 ;;; Screenshot
 (use-package frameshot
+  :if window-system
   :config (frameshot-setup
            '((name   . "w96k")
              (height . 800)
@@ -379,10 +380,12 @@
 (use-package debbugs)
 
 ;;; Icons
-(use-package all-the-icons)
+(use-package all-the-icons
+  :if window-system)
 
 ;;; Icons for dired
 (use-package all-the-icons-dired
+  :if window-system
   :diminish
   :after all-the-icons
   :config
@@ -466,6 +469,7 @@
 
 ;;; PDF Tools
 (use-package pdf-tools
+  :if window-system
   :demand
   :config (pdf-loader-install))
 
@@ -489,6 +493,7 @@
 
 ;;; Show Emoji in emacs
 (use-package emojify
+  :if window-system
   :config (add-hook 'after-init-hook #'global-emojify-mode))
 
 
