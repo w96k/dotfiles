@@ -50,8 +50,8 @@
   :defer nil
   :config
   (setq use-package-verbose t)
-  (setq use-package-always-defer t)
-  (setq use-package-always-ensure nil))
+  (setq use-package-always-defer nil)
+  (setq use-package-always-ensure t))
 
 (use-package use-package-ensure-system-package :ensure)
 
@@ -71,6 +71,7 @@
 
 ;;; Set Theme
 (use-package color-theme-sanityinc-tomorrow
+  :if window-system
   :demand
   :if window-system
   :config (load-theme 'sanityinc-tomorrow-eighties t))
