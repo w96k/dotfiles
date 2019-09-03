@@ -488,9 +488,6 @@
 
 (save-place-mode 1)
 
-;;; Browser
-(use-package w3m)
-
 ;;; Show Emoji in emacs
 (use-package emojify
   :if window-system
