@@ -1,9 +1,10 @@
 ;; This is an operating system configuration template
 ;; for a "bare bones" setup, with no X11 display server
-.c
-(use-modules (gnu) (gnu system nss))
-(use-service-modules base networking ssh databases)
-(use-package-modules bootloaders certs)
+
+(use-modules (gnu) (gnu system nss)
+             (srfi srfi-1))
+(use-service-modules base networking ssh databases monitoring)
+(use-package-modules bootloaders certs geo)
 
 (operating-system
  (host-name "w96k")
@@ -55,20 +56,15 @@
           "netcat"
           "nss-certs"
           "openssh"
-          "w3m"
           "vim"
-          "xinit"
           "xf86-video-intel"
           "x86-energy-perf-policy"
-          "xterm"
-          "xinit"
           "rxvt-unicode"
           "node"
           "ruby"
           "bundler"
           "nix"
-          "postgresql"
-          "php"))
+          "postgresql"))
    %base-packages))
 
  ;; Use the "desktop" services, which include the X11
@@ -76,6 +72,13 @@
  (services
   (cons*
    (postgresql-service #:extension-packages (list postgis))
+   (service openssh-service-type)
+;;   (service dhcpd-service-type 
+;;	(dhcpd-configuration
+;;		(interfaces '("enp0s25"))))
+
+;;   (service dhcp-client-service-type)
+   (service zabbix-server-service-type)
    %base-services))
 
  ;; Allow resolution of '.local' host names with mDNS.
