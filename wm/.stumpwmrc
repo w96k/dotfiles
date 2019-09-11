@@ -39,8 +39,14 @@
   (run-or-raise "icecat" '(:class "IceCat")))
 (define-key *root-map* (kbd "B") "icecat")
 
+;; launch terminal
+(defcommand urxvt () ()
+  "Start Urxvt or switch to it, if it is already running."
+  (run-or-raise "urxvt" '(:class "Urxvt")))
+(define-key *root-map* (kbd "c") "urxvt")
+
 ;; Change xterm to urxvt
-(define-key *root-map* (kbd "c") "exec urxvt")
+(define-key *root-map* (kbd "C") "exec urxvt")
 
 ;; Volume Management
 (progn
