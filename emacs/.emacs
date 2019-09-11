@@ -50,8 +50,8 @@
   :defer nil
   :config
   (setq use-package-verbose t)
-  (setq use-package-always-defer t)
-  (setq use-package-always-ensure nil))
+  (setq use-package-always-defer nil)
+  (setq use-package-always-ensure t))
 
 (use-package use-package-ensure-system-package :ensure)
 
@@ -71,6 +71,7 @@
 
 ;;; Set Theme
 (use-package color-theme-sanityinc-tomorrow
+  :if window-system
   :demand
   :if window-system
   :config (load-theme 'sanityinc-tomorrow-eighties t))
@@ -83,6 +84,7 @@
 ;;; Bullets for org-mode
 (use-package org-bullets
   :ensure t
+  :if window-system
   :commands org-bullets-mode
   :hook (org-mode . org-bullets-mode))
 
@@ -91,18 +93,17 @@
 
 ;;; Easy undo system
 (use-package undo-tree
- :after general
- :commands
- (global-undo-tree-mode)
- :init
- (setq
-  undo-tree-visualizer-timestamps t
-  undo-tree-enable-undo-in-region nil
-  undo-tree-history-directory-alist
-  `(("." . ,(expand-file-name "undo" user-emacs-directory))))
- :config
- (global-undo-tree-mode)
- :diminish undo-tree-mode)
+  :commands
+  (global-undo-tree-mode)
+  :init
+  (setq
+   undo-tree-visualizer-timestamps t
+   undo-tree-enable-undo-in-region nil
+   undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name "undo" user-emacs-directory))))
+  :config
+  (global-undo-tree-mode)
+  :diminish undo-tree-mode)
 
 ;;; Jump to defenition
 (use-package dumb-jump
@@ -353,6 +354,7 @@
 
 ;;; Screenshot
 (use-package frameshot
+  :if window-system
   :config (frameshot-setup
            '((name   . "w96k")
              (height . 800)
@@ -378,10 +380,12 @@
 (use-package debbugs)
 
 ;;; Icons
-(use-package all-the-icons)
+(use-package all-the-icons
+  :if window-system)
 
 ;;; Icons for dired
 (use-package all-the-icons-dired
+  :if window-system
   :diminish
   :after all-the-icons
   :config
@@ -465,6 +469,7 @@
 
 ;;; PDF Tools
 (use-package pdf-tools
+  :if window-system
   :demand
   :config (pdf-loader-install))
 
@@ -483,11 +488,9 @@
 
 (save-place-mode 1)
 
-;;; Browser
-(use-package w3m)
-
 ;;; Show Emoji in emacs
 (use-package emojify
+  :if window-system
   :config (add-hook 'after-init-hook #'global-emojify-mode))
 
 
@@ -593,3 +596,21 @@
                       :foreground "gray30"))
 
 (add-to-list 'exec-path "~/.nodejs/bin/")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 1)
+ '(company-require-match nil)
+ '(company-tooltip-align-annotation t t)
+ '(package-selected-packages
+   (quote
+    (mvim yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide sudo-edit smart-mode-line rjsx-mode rinari rainbow-delimiters projectile powerline pinentry php-mode peep-dired pdf-tools paredit ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl magithub magit-gitflow lsp-ui ledger-mode ivy-hydra intero hackernews guru-mode git-gutter+ frameshot flymd exec-path-from-shell eslint-fix epresent emojify editorconfig edit-server dumb-jump docker disable-mouse dired-sidebar diminish debbugs dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
