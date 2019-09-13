@@ -25,6 +25,8 @@
                        (type "ext4"))
                       %base-file-systems))
 
+ (swap-devices `(/dev/sda5))
+
  (users (cons (user-account
                (name "w96k")
                (group "users")
@@ -76,15 +78,16 @@
  
  (services
   (cons*
-   (service slim-service-type)
+   ;;   (service slim-service-type)
    (service inputattach-service-type
             (inputattach-configuration
-              (device "/dev/ttyS4")
-              (device-type "wacom")))
+             (device "/dev/ttyS4")
+             (device-type "wacom")))
    (postgresql-service #:extension-packages (list postgis))
    (service docker-service-type)
    (service tor-service-type)
-   (console-keymap-service "ru")
+   (extra-special-file "/usr/bin/env"
+                       (file-append coreutils "/bin/env"))
 
    (remove (lambda (service)
              (eq? (service-kind service) gdm-service-type))
