@@ -337,6 +337,9 @@
 
 ;;;; MISC
 
+;;; Telegram
+(use-package telega)
+
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns x))
@@ -607,7 +610,8 @@
  '(company-tooltip-align-annotation t t)
  '(package-selected-packages
    (quote
-    (mvim yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide sudo-edit smart-mode-line rjsx-mode rinari rainbow-delimiters projectile powerline pinentry php-mode peep-dired pdf-tools paredit ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl magithub magit-gitflow lsp-ui ledger-mode ivy-hydra intero hackernews guru-mode git-gutter+ frameshot flymd exec-path-from-shell eslint-fix epresent emojify editorconfig edit-server dumb-jump docker disable-mouse dired-sidebar diminish debbugs dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag))))
+    (telega mvim yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide sudo-edit smart-mode-line rjsx-mode rinari rainbow-delimiters projectile powerline pinentry php-mode peep-dired pdf-tools paredit ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl magithub magit-gitflow lsp-ui ledger-mode ivy-hydra intero hackernews guru-mode git-gutter+ frameshot flymd exec-path-from-shell eslint-fix epresent emojify editorconfig edit-server dumb-jump docker disable-mouse dired-sidebar diminish debbugs dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag)))
+ '(send-mail-function (quote smtpmail-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
