@@ -10,6 +10,7 @@
                (nnimap-stream ssl)))
 
 (add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
+(add-to-list 'gnus-secondary-select-methods '(nntp "news.giganews.com"))
 
 
 (setq smtpmail-smtp-server "posteo.de"
