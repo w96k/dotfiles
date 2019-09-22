@@ -2,7 +2,7 @@
 	helper = cache
 [user]
 	name = Mikhail Kirillov
-	email = w96k.ru@gmail.com
+	email = w96k@member.fsf.org
 [gpg]
 	program = gpg2
 [github]
@@ -12,5 +12,5 @@
 [sendemail]
 	smtpEncryption = tls
 	smtpServer = smtp.gmail.com
-	smtpUser = w96k.ru@gmail.com
+	smtpUser = w96k@posteo.net
 	smtpServerPort = 587
