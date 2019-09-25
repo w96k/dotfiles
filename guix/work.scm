@@ -3,7 +3,7 @@
 (use-modules (gnu) (gnu system nss)
 	     (srfi srfi-1))
 
-(use-service-modules xorg desktop networking desktop databases web docker)
+(use-service-modules xorg desktop networking ssh desktop databases web docker)
 (use-package-modules certs geo)
 
 (operating-system
@@ -49,16 +49,17 @@
                           "stumpwm"
                           "emacs-no-x-toolkit"
                           "font-dejavu"
-                          "font-inconsolata"
-                          "font-fira-code"
                           "font-terminus"
                           "fontconfig"
                           "nix"
                           "bundler"
+                          "xf86-video-intel"
+                          "x86-energy-perf-policy"
                           "node"
                           "ruby"
                           "git"
                           "htop"
+                          "openssh"
                           "rxvt-unicode"
                           "nss-certs"
                           "gvfs"))
@@ -66,6 +67,7 @@
 
  (services (cons*
             (service slim-service-type)
+            (service openssh-service-type)
             ;;                          (set-xorg-configuration
             ;;                           (xorg-configuration
             ;;                            (keyboard-layout keyboard-layout))))
