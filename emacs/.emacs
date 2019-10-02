@@ -238,6 +238,11 @@
 
 ;;;; LANGUAGES
 
+;;; Python
+(use-package elpy
+  :init
+  (elpy-enable))
+
 ;;; Vue
 (use-package vue-mode
   :config (setq mmm-submode-decoration-level 0))
