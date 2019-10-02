@@ -240,7 +240,9 @@
 ;;; Python
 (use-package elpy
   :init
-  (elpy-enable))
+  (elpy-enable)
+  :config
+  (setq elpy-rpc-python-command "python3"))
 
 ;;; Vue
 (use-package vue-mode
