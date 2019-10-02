@@ -93,6 +93,7 @@
 
 ;;; Easy undo system
 (use-package undo-tree
+  :diminish
   :commands
   (global-undo-tree-mode)
   :init
@@ -101,9 +102,7 @@
    undo-tree-enable-undo-in-region nil
    undo-tree-history-directory-alist
    `(("." . ,(expand-file-name "undo" user-emacs-directory))))
-  :config
-  (global-undo-tree-mode)
-  :diminish undo-tree-mode)
+  (global-undo-tree-mode))
 
 ;;; Jump to defenition
 (use-package dumb-jump
