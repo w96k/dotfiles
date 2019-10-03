@@ -345,6 +345,9 @@
 
 ;;;; MISC
 
+;;; Show TODO, FIX in comments
+(use-package fic-mode)
+
 (electric-pair-mode)
 
 ;;; Rest client
