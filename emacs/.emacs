@@ -242,7 +242,10 @@
   :init
   (elpy-enable)
   :config
-  (setq elpy-rpc-python-command "python3"))
+  (setq elpy-rpc-python-command "python3")
+  (when (load "flycheck" t t)
+    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    (add-hook 'elpy-mode-hook 'flycheck-mode)))
 
 ;;; Vue
 (use-package vue-mode
@@ -289,7 +292,7 @@
 (use-package yasnippet
   :demand
   :diminish
-  :config (yas-global-mode 1))
+  :init (yas-global-mode 1))
 
 (use-package yasnippet-snippets
   :diminish
