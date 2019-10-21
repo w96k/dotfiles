@@ -25,7 +25,7 @@
                        (type "ext4"))
                       %base-file-systems))
 
- (swap-devices `(/dev/sda5))
+ (swap-devices `("/dev/sda5"))
 
  (users (cons (user-account
                (name "w96k")
@@ -70,6 +70,7 @@
           "docker-cli"
           "nix"
           "postgresql"
+          "ghc"
           "php"))
    %base-packages))
 
