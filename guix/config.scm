@@ -1,4 +1,5 @@
 (use-modules (gnu) (gnu system nss)
+             
              (srfi srfi-1))
 
 (use-service-modules xorg
@@ -8,12 +9,14 @@
                      web
                      docker)
 
-(use-package-modules geo)
+(use-package-modules geo
+                     linux)
 
 (operating-system
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
+ (kernel linux-libre-4.19)
 
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
