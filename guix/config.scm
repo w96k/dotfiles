@@ -12,12 +12,33 @@
 (use-package-modules geo
                      linux)
 
+
+;; My modification of %desktop-services
+(define %my-services
+  (cons*
+   (service slim-service-type)
+   (service inputattach-service-type
+            (inputattach-configuration
+             (device "/dev/ttyS4")
+             (device-type "wacom")))
+   (postgresql-service #:extension-packages (list postgis))
+   (service docker-service-type)
+   (service tor-service-type)
+   (extra-special-file "/usr/bin/env"
+                       (file-append coreutils "/bin/env"))
+   %desktop-services))
+
+;; Remove gdm
+(set! %my-services
+  (remove (lambda (service)
+            (eq? (service-kind service) gdm-service-type))
+          %my-services))
+
 (operating-system
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
- (locale "ru_RU.utf8")
+ (locale "ru_RU.utf8") 
  (kernel linux-libre-4.19)
-
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (target "/dev/sda")))
@@ -74,28 +95,14 @@
           "nix"
           "postgresql"
           "ghc"
-          "php"))
+          "php"
+          "glibc-utf8-locales"))
    %base-packages))
 
  ;; Use the "desktop" services, which include the X11
  ;; log-in service, networking with NetworkManager, and more.
- 
- (services
-  (cons*
-   ;;   (service slim-service-type)
-   (service inputattach-service-type
-            (inputattach-configuration
-             (device "/dev/ttyS4")
-             (device-type "wacom")))
-   (postgresql-service #:extension-packages (list postgis))
-   (service docker-service-type)
-   (service tor-service-type)
-   (extra-special-file "/usr/bin/env"
-                       (file-append coreutils "/bin/env"))
 
-   (remove (lambda (service)
-             (eq? (service-kind service) gdm-service-type))
-           %desktop-services)))
+ (services  %my-services)
 
  ;; Allow resolution of '.local' host names with mDNS.
  (name-service-switch %mdns-host-lookup-nss))
