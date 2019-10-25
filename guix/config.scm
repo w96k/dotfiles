@@ -12,6 +12,11 @@
 (use-package-modules geo
                      linux)
 
+;; Run powertop --autotune on boot
+(define %powertop-service
+  (simple-service 'powertop activation-service-type
+                  #~(zero? (system* #$(file-append powertop "/sbin/powertop")
+                                    "--auto-tune"))))
 
 ;; My modification of %desktop-services
 (define %my-services
@@ -26,6 +31,7 @@
    (service tor-service-type)
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
+   %powertop-service
    %desktop-services))
 
 ;; Remove gdm
@@ -96,6 +102,7 @@
           "postgresql"
           "ghc"
           "php"
+          "alsa-utils"
           "glibc-utf8-locales"))
    %base-packages))
 
