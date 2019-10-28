@@ -103,6 +103,7 @@
           "ghc"
           "php"
           "alsa-utils"
+          "mc"
           "glibc-utf8-locales"))
    %base-packages))
 
