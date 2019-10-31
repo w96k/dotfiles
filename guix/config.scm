@@ -82,6 +82,7 @@
           "emacs-no-x-toolkit"
           "fontconfig"
           "git"
+          "darcs"
           "htop"
           "netcat"
           "nss-certs"
