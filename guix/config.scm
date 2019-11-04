@@ -102,9 +102,11 @@
           "nix"
           "postgresql"
           "ghc"
+          "cabal-install"
           "php"
           "alsa-utils"
           "mc"
+          "dmidecode"
           "glibc-utf8-locales"))
    %base-packages))
 
