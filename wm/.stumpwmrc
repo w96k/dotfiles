@@ -35,7 +35,7 @@
 ;; launch Web browser
 (defcommand icecat () ()
   "Start Icecat or switch to it, if it is already running."
-  (run-or-raise "icecat" '(:class "IceCat")))
+  (run-or-raise "icecat" '(:class "Icecat")))
 (define-key *root-map* (kbd "B") "icecat")
 
 ;; launch terminal
@@ -46,6 +46,12 @@
 
 ;; Change xterm to urxvt
 (define-key *root-map* (kbd "C") "exec urxvt")
+
+;; Change emacs to emacsclient
+(defcommand emacsclient () ()
+  "Start Urxvt or switch to it, if it is already running."
+  (run-or-raise "emacsclient -c -a emaces" '(:class "Emacs")))
+(define-key *root-map* (kbd "e") "emacsclient -c -a emaces")
 
 ;; Volume Management
 (progn

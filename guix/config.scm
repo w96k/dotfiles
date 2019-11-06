@@ -22,6 +22,7 @@
 (define %my-services
   (cons*
    (service slim-service-type)
+
    (service inputattach-service-type
             (inputattach-configuration
              (device "/dev/ttyS4")
@@ -36,9 +37,9 @@
 
 ;; Remove gdm
 (set! %my-services
-  (remove (lambda (service)
-            (eq? (service-kind service) gdm-service-type))
-          %my-services))
+(remove (lambda (service)
+          (eq? (service-kind service) gdm-service-type))
+%my-services))
 
 (operating-system
  (host-name "Libreboot")
