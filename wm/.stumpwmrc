@@ -12,6 +12,7 @@
 
 (setf *mode-line-pad-x* 8
       *mode-line-pad-y* 1
+      *mode-line-timeout* 1
       *window-border-style* :thin
       *frame-number-map* "1234567890"
       *mode-line-position* :top
