@@ -81,6 +81,7 @@
           "mailutils"
           "font-terminus"
           "emacs-no-x-toolkit"
+          "emacs-use-package"
           "fontconfig"
           "git"
           "darcs"
