@@ -5,41 +5,12 @@
 
 ;;;; INIT
 
-;;; Add Melpa repository +
-;;; Load use-package & enable installing all packages by default
-;;; You need to manually install use-package from melpa
-;;; (it's the only package you need to install manually)
-;;; Rest packages will be installed automatically
-;;;
-;;; You need to have "INIT" section and execute:
-;;; M-x package-install RET use-package RET
-
 (eval-when-compile
   ;; increase GC-limit up to 100M for boot speedup
   (setq gc-cons-threshold 500000000)
 
     ;;; Set font
   (add-to-list 'default-frame-alist '(font . "terminus-12"))
-
-  ;; Display whitespace
-  (global-whitespace-mode)
-
-  ;;; Display whitespace
-  (progn
-  (setq whitespace-style (quote (face spaces tabs
-                                      space-mark tab-mark newline-mark )))
-  (setq whitespace-display-mappings
-        '(
-          (space-mark 32 [183] [46])
-          (tab-mark 9 [9655 9] [92 9])
-          ))
-
-  (set-face-attribute 'whitespace-space nil :background nil
-                      :foreground "gray30")
-  (set-face-attribute 'whitespace-newline nil :background nil
-                      :foreground "gray30")
-(set-face-attribute 'whitespace-tab nil :background nil
-                      :foreground "gray30"))
 
   ;;; Disable emacs gui
   (menu-bar-mode -1)
@@ -91,10 +62,18 @@
   :demand
   :config (load-theme 'sanityinc-tomorrow-eighties t))
 
-;;; Powerline
-(use-package powerline
-  :demand
-  :config (powerline-default-theme))
+;;; Doom modeline
+(use-package doom-modeline
+  :config
+  (progn
+    (setq doom-modeline-height 1)
+    (set-face-attribute 'mode-line nil :height 95)
+    (set-face-attribute 'mode-line-inactive nil :height 95)
+    (setq doom-modeline-major-mode-icon t)
+    (setq doom-modeline-indent-info t)
+    (setq doom-modeline-lsp t)
+    (setq doom-modeline-env-version t))
+  :hook (after-init . doom-modeline-mode))
 
 ;;; Bullets for org-mode
 (use-package org-bullets
@@ -616,22 +595,9 @@
 ;;; Diary
 (use-package org-journal)
 
+(use-package whitespace-mode
+  :config
+  (setq whitespace-style '(indentation))
+v  (global-whitespace-mode))
+
 (add-to-list 'exec-path "~/.nodejs/bin/")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-idle-delay 0.1)
- '(company-minimum-prefix-length 1)
- '(company-require-match nil)
- '(company-tooltip-align-annotation t t)
- '(package-selected-packages
-   (quote
-    (mvim yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide theme-magic telega symon sudoku sudo-edit smart-mode-line sed-mode rjsx-mode rinari restclient restart-emacs rainbow-delimiters quelpa-use-package projectile prettier-js powerline pinentry php-mode peep-dired pdf-tools paredit paradox ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl mwim matrix-client magithub magit-gitflow lsp-ui leerzeichen ledger-mode ivy-hydra intero hackernews guru-mode git-gutter git-gutter+ frameshot flymd fic-mode exwm exec-path-from-shell eslint-fix epresent emojify elpy editorconfig edit-server dumb-jump dockerfile-mode docker disable-mouse dired-sidebar diminish debbugs dashboard dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
