@@ -1,4 +1,4 @@
-;;;; My config for Emacs that I use in day-to-day work
+;;;; Emacs --- My config for Emacs that I use in day-to-day work
 ;;;;
 ;;;; https://w96k.com/
 ;;;; 2018-2019 (c) Mikhail w96k Kirillov
@@ -45,7 +45,7 @@
   :config
   (setq use-package-verbose t)
   (setq use-package-always-defer t)
-  (setq use-package-always-ensure nil))
+  (setq use-package-always-ensure t))
 
 (use-package use-package-ensure-system-package :ensure)
 
@@ -594,10 +594,5 @@
 
 ;;; Diary
 (use-package org-journal)
-
-(use-package whitespace-mode
-  :config
-  (setq whitespace-style '(indentation))
-v  (global-whitespace-mode))
 
 (add-to-list 'exec-path "~/.nodejs/bin/")
