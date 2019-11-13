@@ -51,6 +51,10 @@
 
 ;;;; VISUALS
 
+;;; Color parens
+(use-package rainbow-delimiters
+    :hook ((prog-mode . rainbow-delimiters-mode)))
+
 ;;; Display numbers
 (global-display-line-numbers-mode)
 
@@ -65,14 +69,14 @@
 ;;; Doom modeline
 (use-package doom-modeline
   :config
-  (progn
-    (setq doom-modeline-height 1)
-    (set-face-attribute 'mode-line nil :height 95)
-    (set-face-attribute 'mode-line-inactive nil :height 95)
-    (setq doom-modeline-major-mode-icon t)
-    (setq doom-modeline-indent-info t)
-    (setq doom-modeline-lsp t)
-    (setq doom-modeline-env-version t))
+  (setq doom-modeline-height 1)
+  (set-face-attribute 'mode-line nil :height 95)
+  (set-face-attribute 'mode-line-inactive nil :height 95)
+  (setq doom-modeline-indent-info t
+        doom-modeline-lsp t
+        doom-modeline-env-version t
+        column-number-mode t
+        line-number-mode t)
   :hook (after-init . doom-modeline-mode))
 
 ;;; Bullets for org-mode
@@ -157,16 +161,17 @@
 (use-package git-gutter+
   :ensure t
   :init (global-git-gutter+-mode)
-  :config (progn
-            (define-key git-gutter+-mode-map (kbd "C-x n") 'git-gutter+-next-hunk)
-            (define-key git-gutter+-mode-map (kbd "C-x p") 'git-gutter+-previous-hunk)
-            (define-key git-gutter+-mode-map (kbd "C-x v =") 'git-gutter+-show-hunk)
-            (define-key git-gutter+-mode-map (kbd "C-x r") 'git-gutter+-revert-hunks)
-            (define-key git-gutter+-mode-map (kbd "C-x t") 'git-gutter+-stage-hunks)
-            (define-key git-gutter+-mode-map (kbd "C-x c") 'git-gutter+-commit)
-            (define-key git-gutter+-mode-map (kbd "C-x C") 'git-gutter+-stage-and-commit)
-            (define-key git-gutter+-mode-map (kbd "C-x C-y") 'git-gutter+-stage-and-commit-whole-buffer)
-            (define-key git-gutter+-mode-map (kbd "C-x U") 'git-gutter+-unstage-whole-buffer))
+  :config
+  (progn
+    (define-key git-gutter+-mode-map (kbd "C-x n") 'git-gutter+-next-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x p") 'git-gutter+-previous-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x v =") 'git-gutter+-show-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x r") 'git-gutter+-revert-hunks)
+    (define-key git-gutter+-mode-map (kbd "C-x t") 'git-gutter+-stage-hunks)
+    (define-key git-gutter+-mode-map (kbd "C-x c") 'git-gutter+-commit)
+    (define-key git-gutter+-mode-map (kbd "C-x C") 'git-gutter+-stage-and-commit)
+    (define-key git-gutter+-mode-map (kbd "C-x C-y") 'git-gutter+-stage-and-commit-whole-buffer)
+    (define-key git-gutter+-mode-map (kbd "C-x U") 'git-gutter+-unstage-whole-buffer))
   :diminish (git-gutter+-mode . "gg"))
 
 ;;; Autoformatting code
