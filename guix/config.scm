@@ -1,5 +1,4 @@
-(use-modules (gnu) (gnu system nss)
-             
+(use-modules (gnu) (gnu system nss)             
              (srfi srfi-1))
 
 (use-service-modules xorg
@@ -73,6 +72,8 @@
         '(
           "curl"
           "stow"
+          "icecat"
+          "next"
           "ratpoison"
           "stumpwm"
           "i3-wm"
@@ -109,6 +110,9 @@
           "alsa-utils"
           "mc"
           "dmidecode"
+          "xorg-server"
+          "xorg-server-xwayland"
+          "wayland"
           "glibc-utf8-locales"))
    %base-packages))
 
