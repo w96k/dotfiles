@@ -114,6 +114,7 @@
           "xorg-server"
           "xorg-server-xwayland"
           "wayland"
+          "gnunet"
           "glibc-utf8-locales"))
    %base-packages))
 
