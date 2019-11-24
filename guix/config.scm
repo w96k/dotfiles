@@ -83,6 +83,7 @@
           "font-terminus"
           "emacs-no-x-toolkit"
           "emacs-use-package"
+          "emacs-guix"
           "fontconfig"
           "git"
           "darcs"
