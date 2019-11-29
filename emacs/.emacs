@@ -69,9 +69,9 @@
 ;;; Doom modeline
 (use-package doom-modeline
   :config
-  (setq doom-modeline-height 1)
+  (setq doom-modeline-height 0.95)
   (set-face-attribute 'mode-line nil :height 95)
-  (set-face-attribute 'mode-line-inactive nil :height 95)
+  (set-face-attribute 'mode-line-inactive nil :height 100)
   (setq doom-modeline-indent-info t
         doom-modeline-lsp t
         doom-modeline-env-version t
@@ -348,6 +348,13 @@
 
 ;;;; MISC
 
+;;; IRC
+(use-package erc
+  :config
+  (erc-autojoin-enable)
+  (setq erc-autojoin-channels-alist
+        '(("freenode.net" "#emacs" "#wiki" "#next-browser"))))
+
 ;;; Show TODO, FIX in comments
 (use-package fic-mode)
 
@@ -357,7 +364,8 @@
 (use-package restclient)
 
 ;;; Telegram
-(use-package telega)
+(use-package telega
+  :config (telega-mode-line-mode 1))
 
 (use-package exec-path-from-shell
   :config
@@ -558,7 +566,11 @@
 (use-package rainbow-delimiters)
 
 ;;; Break line at 80 symbols
-(setq fill-column 80)
+(use-package visual-fill-column
+  :config
+  (setq fill-column 80)
+  (global-visual-fill-column-mode)
+  (global-visual-line-mode))
 
 ;;; Disable mouse
 (use-package disable-mouse
