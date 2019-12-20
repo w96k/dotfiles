@@ -49,6 +49,8 @@
 
 (use-package use-package-ensure-system-package :ensure)
 
+(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/")
+
 ;;;; VISUALS
 
 ;;; Color parens
@@ -148,8 +150,8 @@
   :bind ("C-x g" . magit-status)
   :config (setq magit-refresh-status-buffer nil))
 
-;;; Magit' github integration
-(use-package magithub
+;;; Magit forge (magit integration with git hostings)
+(use-package forge
   :after magit)
 
 ;;; Git flow
@@ -347,6 +349,10 @@
 (use-package cider)
 
 ;;;; MISC
+
+;;; Show last key and command in modeline
+(use-package keycast
+  :config (keycast-mode))
 
 ;;; IRC
 (use-package erc
@@ -612,4 +618,23 @@
 ;;; Diary
 (use-package org-journal)
 
-(add-to-list 'exec-path "~/.nodejs/bin/")
+;;; Lilypond
+(use-package lilypond-mode
+  :ensure nil
+  :ensure-system-package lilypond
+  :config
+   (autoload 'LilyPond-mode "lilypond-mode")
+   (setq auto-mode-alist
+         (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+   (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+
+;;; Flycheck lilypond
+(use-package flycheck-lilypond)
+
+;; (global-set-key [(control ?h)] 'delete-backward-char)
+
+(use-package lilypond-mode
+  :ensure nil
+  :ensure-system-package node
+  :config
+  (add-to-list 'exec-path "~/.nodejs/bin/"))
