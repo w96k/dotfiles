@@ -632,9 +632,3 @@
 (use-package flycheck-lilypond)
 
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
-
-(use-package lilypond-mode
-  :ensure nil
-  :ensure-system-package node
-  :config
-  (add-to-list 'exec-path "~/.nodejs/bin/"))
