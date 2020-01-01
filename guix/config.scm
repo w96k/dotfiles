@@ -43,8 +43,8 @@
 (operating-system
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
- (locale "ru_RU.utf8") 
- (kernel linux-libre-4.19)
+ (locale "ru_RU.utf8")
+ (kernel-arguments '("processor.max_cstate=2"))
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (target "/dev/sda")))
@@ -118,6 +118,8 @@
           "xorg-server-xwayland"
           "wayland"
           "gnunet"
+          "adwaita-icon-theme"
+          "mesa"
           "glibc-utf8-locales"))
    %base-packages))
 
