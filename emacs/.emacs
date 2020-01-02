@@ -51,6 +51,10 @@
 
 (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/")
 
+;; Information about me
+(setq user-full-name "Mikhail Kirillov"
+      user-mail-address "w96k@posteo.net")
+
 ;;;; VISUALS
 
 ;;; Color parens
@@ -80,6 +84,95 @@
         column-number-mode t
         line-number-mode t)
   :hook (after-init . doom-modeline-mode))
+
+;;; Org-mode
+(use-package org
+  :config
+  (setq org-publish-project-alist
+        `(("blog" :components ("blog-content" "blog-styles"))
+          ("blog-styles"
+           :base-directory "~/github/blog/public"
+           :base-extension "jpg\\|gif\\|png\\|ico\\|css"
+           :publishing-directory "~/github/blog/dist/public/"
+           :recursive t
+           :publishing-function org-publish-attachment
+           )
+          ("blog-content"
+           :base-directory "~/github/blog/content"
+           :publishing-directory "~/github/blog/dist"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+
+           :html-doctype "xhtml5"
+
+           :with-title nil
+           :with-author t
+           :with-creator nil
+           :with-date t
+           :with-email t
+           :with-footnotes t
+           :html-html5-fancy t
+           :html-preamble "
+<header class=\"navbar\">
+<a href=\"/\" class=\"logo\">@w96k</a>
+<a class=\"button\" href=\"/about.html\">Обо мне</a>
+<a class=\"button\" href=\"https://github.com/w96k/cv/raw/master/cv.pdf\">CV</a>
+<a class=\"button\" href=\"/feed.xml\"><span class=\"icon-rss\"></span></a>
+</header>"
+
+           :html-head "
+<link rel=\"shortcut icon\" href=\"/public/favicon.ico\">
+<link rel=\"stylesheet\" href=\"/public/css/mini.css\" type=\"text/css\"/>
+<link rel=\"stylesheet\" href=\"/public/css/custom.css\" type=\"text/css\"/>
+"
+
+           :html-container "article"
+           :html-postamble "
+  <div class=\"row\">
+    <div class=\"col-sm\">
+      <p class=\"licenses\">
+        <a href=\"https://creativecommons.org/licenses/by/4.0/\">
+          <img alt=\"Лицензия Creative Commons\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" />
+        </a>
+        <a href=\"https://www.gnu.org/licenses/gpl-3.0.txt\">
+          <img src=\"/public/images/gpl.png\">
+        </a>
+     </p>
+    </div>
+
+    <div class=\"col-sm\" align=\"center\">
+      <p>© 2020 Mikhail Kirillov</p>
+      <p><a href=\"https://git.sr.ht/~w96k/blog\">Исходный код</a></p>
+    </div>
+
+    <div class=\"col-sm\" align=\"right\">
+      <p><span class=\"icon-settings\"></span> %c</p>
+      <p><span class=\"icon-calendar\"></span> %C</p>
+    </div>
+  </div>
+
+  <br>
+  <div align=\"center\">
+    <small>
+      <p>Содержимое данного сайта доступно по лицензии
+        <a href=\"https://creativecommons.org/licenses/by/4.0/\">
+          Creative Commons «Attribution» («Атрибуция») 4.0 Всемирная
+        </a>
+      </p>
+      <p>Исходный код данного сайта доступен по лицензии GNU General Public License Version 3</p>
+    </small>
+  </div>"
+
+           :section-numbers nil
+           ;;:with-sub-superscript nil ;; important!!
+
+           ;; sitemap - list of blog articles
+           :auto-sitemap t
+           :sitemap-filename "sitemap.org"
+           :sitemap-title "@w96k"
+           :sitemap-sort-files anti-chronologically))))
+
+(use-package simple-httpd)
 
 ;;; Bullets for org-mode
 (use-package org-bullets
@@ -257,6 +350,7 @@
 (use-package web-mode
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-markup-indent-offset 2)
   (setq web-mode-enable-auto-pairing t)
   (setq web-mode-enable-current-element-highlight t)
   (setq web-mode-enable-current-column-highlight t))
@@ -619,11 +713,9 @@
 (use-package org-journal)
 
 ;;; Lilypond
-(use-package lilypond-mode
-  :ensure nil
-  :ensure-system-package lilypond
-  :config
-   (autoload 'LilyPond-mode "lilypond-mode")
+(progn
+  (autoload 'lilypond "lilypond")
+   (autoload 'lilypond-mode "lilypond-mode")
    (setq auto-mode-alist
          (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
    (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
@@ -631,4 +723,25 @@
 ;;; Flycheck lilypond
 (use-package flycheck-lilypond)
 
+;;; Publishing system
+(use-package muse)
+
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 1)
+ '(company-require-match nil)
+ '(company-tooltip-align-annotation t t)
+ '(package-selected-packages
+   (quote
+    (simple-httpd web-server ox-twbst ox-twbs org-mode yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide theme-magic telega symon sudoku sudo-edit smart-mode-line sed-mode rjsx-mode rinari restclient restart-emacs rainbow-delimiters quelpa-use-package projectile prettier-js powerline pinentry php-mode peep-dired pdf-tools paredit paradox ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl mwim muse moody matrix-client magithub magit-gitflow lsp-ui leerzeichen ledger-mode keycast kaolin-themes ivy-hydra intero highlight-indent-guides hackernews guru-mode git-gutter git-gutter+ frameshot forge flymd flycheck-lilypond fic-mode exwm exec-path-from-shell eslint-fix epresent emojify elpy editorconfig edit-server dumb-jump doom-modeline dockerfile-mode docker disable-mouse dired-sidebar diminish debbugs dashboard dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
