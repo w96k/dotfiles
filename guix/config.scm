@@ -1,3 +1,9 @@
+;; This is GUIX system that I use on day-to-day basis.
+;; I use it on my libreboot'ed thinkpad X200T
+;;
+;; Feel free to use it
+;; https://w96k.com
+
 (use-modules (gnu) (gnu system nss)             
              (srfi srfi-1))
 
@@ -8,8 +14,7 @@
                      web
                      docker)
 
-(use-package-modules geo
-                     linux)
+(use-package-modules geo linux)
 
 ;; Run powertop --autotune on boot
 (define %powertop-service
@@ -22,23 +27,27 @@
   (cons*
    (service slim-service-type)
 
+   ;; Wacom tablet support
    (service inputattach-service-type
             (inputattach-configuration
              (device "/dev/ttyS4")
              (device-type "wacom")))
+   
    (postgresql-service #:extension-packages (list postgis))
    (service docker-service-type)
    (service tor-service-type)
+   ;; Fix unavailable /usr/bin/env
+   ;; It's needed by many bash scripts
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
-  ;; %powertop-service
+   %powertop-service
    %desktop-services))
 
-;; Remove gdm
+;; Remove gdm (gdm is default in guix)
 (set! %my-services
-(remove (lambda (service)
-          (eq? (service-kind service) gdm-service-type))
-%my-services))
+  (remove (lambda (service)
+            (eq? (service-kind service) gdm-service-type))
+          %my-services))
 
 (operating-system
  (host-name "Libreboot")
@@ -52,7 +61,7 @@
                      "i915"
                      "intel_agp"))
  (initrd-modules (append '("i915")
-                       %base-initrd-modules))
+                         %base-initrd-modules))
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (target "/dev/sda")))
@@ -106,8 +115,6 @@
           "openssh"
           "vim"
           "xinit"
-          ;;"xf86-video-intel"
-          "x86-energy-perf-policy"
           "xterm"
           "xinit"
           "rxvt-unicode"
