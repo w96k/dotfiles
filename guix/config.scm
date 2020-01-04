@@ -31,7 +31,7 @@
    (service tor-service-type)
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
-   %powertop-service
+  ;; %powertop-service
    %desktop-services))
 
 ;; Remove gdm
@@ -44,7 +44,15 @@
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
- (kernel-arguments '("processor.max_cstate=2"))
+ (kernel-arguments '("processor.max_cstate=1"  ;Disable power savings
+                     "intel_idle.max_cstate=0" ;(cstate 3-4 provides
+                                               ;high freq cpu noice)
+                     "intremap=off" ;Fix for failed to map dmar2
+                     "acpi=strict" 
+                     "i915"
+                     "intel_agp"))
+ (initrd-modules (append '("i915")
+                       %base-initrd-modules))
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (target "/dev/sda")))
@@ -70,6 +78,9 @@
   (append
    (map specification->package
         '(
+          "libva"
+          "libva-utils"
+          "intel-vaapi-driver"
           "curl"
           "stow"
           "icecat"
@@ -95,7 +106,7 @@
           "openssh"
           "vim"
           "xinit"
-          "xf86-video-intel"
+          ;;"xf86-video-intel"
           "x86-energy-perf-policy"
           "xterm"
           "xinit"
@@ -114,12 +125,9 @@
           "alsa-utils"
           "mc"
           "dmidecode"
-          "xorg-server"
-          "xorg-server-xwayland"
           "wayland"
           "gnunet"
           "adwaita-icon-theme"
-          "mesa"
           "glibc-utf8-locales"))
    %base-packages))
 
