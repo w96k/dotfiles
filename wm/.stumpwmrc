@@ -1,29 +1,50 @@
 (in-package :stumpwm)
+(load "~/quicklisp/setup.lisp")
 
-(setq *startup-message* nil)
-(setq *startup-mode-line* t)
+(setq *startup-message* "Welcome to your lovely LISP-machine")
+
+;; Shepherd (with emacs daemon)
+(run-shell-command "shepherd")
+
+(set-prefix-key (kbd "C-t"))
 
 (set-module-dir "~/stumpwm/contrib")
+(ql:quickload :clx-truetype)
 
-;; Modeline Battery
 (load-module "battery-portable")
 (load-module "cpu")
 (load-module "mem")
+(load-module "command-history")
+(load-module "clipboard-history")
+(load-module "shell-command-history")
+(load-module "app-menu")
+;;(load-module "screenshot")
+(load-module "ttf-fonts")
 
-(setf *mode-line-pad-x* 8
-      *mode-line-pad-y* 1
+(clx-truetype:cache-fonts)
+
+(setf *mode-line-pad-x* 20
+      *mode-line-pad-y* 8
       *mode-line-timeout* 1
+      *mouse-focus-policy* :click
       *window-border-style* :thin
-      *frame-number-map* "1234567890"
+      *message-window-gravity* :center
+      *normal-border-width* 8
+      *mode-line-border-width* 0
+      *transient-border-width* 0
       *mode-line-position* :top
-      *window-format* "%m%n%s%c"
+      *window-format* "%m%n%s%t "
+      *hidden-window-color* ""
       *cpu-modeline-fmt* "%C"
+      *mode-line-background-color* "#2d2d2d"
+      *startup-mode-line* t
       *window-name-source* :class
       *delim* " ^2::^7 "
+      
       *screen-mode-line-format* (list
                                  ;; Windows
-                                 ;;"[^B%n^b]"
-                                 "^7%W ^>^7"
+                                 ;;"[^4%n^b]"
+                                 "^7%v  ^>^7"
                                  ;; CPU
                                  "%C" *delim*
                                  ;; RAM
@@ -34,11 +55,24 @@
                                  "%d"
                                  ))
 
+;; Colors
+(set-bg-color "#1C2028")
+(set-border-color "#666666")
+(set-focus-color "#6699cc")
+(set-unfocus-color "#2d2d2d")
+(set-win-bg-color "#2d2d2d")
+
+
 ;; launch Web browser
 (defcommand next () ()
-  "Start Icecat or switch to it, if it is already running."
+  "Start Next or switch to it, if it is already running."
   (run-or-raise "next" '(:class "Next")))
 (define-key *root-map* (kbd "B") "next")
+
+(defcommand icecat () ()
+  "Start Next or switch to it, if it is already running."
+  (run-or-raise "icecat" '(:class "IceCat")))
+(define-key *root-map* (kbd "b") "icecat")
 
 ;; launch terminal
 (defcommand urxvt () ()
@@ -62,5 +96,48 @@
   (define-key *top-map* (kbd "XF86AudioMute") "amixer -q sset Master toggle"))
 
 ;; Mode-line
-(progn
-  (enable-mode-line (current-screen) (current-head) t))
+(enable-mode-line (current-screen) (current-head) t)
+
+
+;; Gaps
+(load-module "swm-gaps")
+(setf swm-gaps:*inner-gaps-size* 8)
+(setf swm-gaps:*outer-gaps-size* 4)
+(swm-gaps:toggle-gaps)
+
+;; Golden Ratio
+;;(load-module "swm-golden-ratio")
+;;(swm-golden-ratio:toggle-golden-ratio)
+
+(setf (getenv "GDK_CORE_DEVICE_EVENTS") "1")
+
+(defun key-press-hook (key key-seq cmd)
+    (let ((*message-window-gravity* :bottom))
+      (message-no-timeout "Key sequence: ~A"
+               (print-key-seq (reverse key-seq))))
+    (when (stringp cmd)
+        (sleep 0.1)))
+
+(defmacro replace-hook (hook fn)
+  `(remove-hook ,hook ,fn)
+  `(add-hook ,hook ,fn))
+
+(replace-hook *key-press-hook* 'key-press-hook)
+
+;; Clipboard history
+(define-key *root-map* (kbd "C-y") "show-clipboard-history")
+(clipboard-history:start-clipboard-manager)
+
+;; Shell history
+(setf shell-command-history:*shell-command-history-file*
+      "/home/w96k/.cache/stumpwm/shell-command-history")
+
+;; Menu
+(setq app-menu:*app-menu*
+      '(("Telegram" "telegram-desktop")
+        ("Icecat" icecat)
+        ("Next" next)
+        ("Terminal" urxvt)
+        ("Deluge" "deluge")))
+
+(define-key *root-map* (kbd "q") "show-menu")
