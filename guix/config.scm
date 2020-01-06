@@ -40,7 +40,7 @@
    ;; It's needed by many bash scripts
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
-   %powertop-service
+   ;;%powertop-service
    %desktop-services))
 
 ;; Remove gdm (gdm is default in guix)
@@ -53,15 +53,22 @@
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
+ (kernel linux-libre-4.19)
  (kernel-arguments '("processor.max_cstate=1"  ;Disable power savings
                      "intel_idle.max_cstate=0" ;(cstate 3-4 provides
                                                ;high freq cpu noice)
                      "intremap=off" ;Fix for failed to map dmar2
-                     "acpi=strict" 
-                     "i915"
+                     "acpi=strict"
+                     "splash"
+                     "intel_iommu=on"
+                     "i915.enable_dc=0"
+                     "i915.modeset=1"
+                     "i915.enable_psr=0"
+                     "i915.enable_fbc=0"
+                     "i915.fastboot=1"
                      "intel_agp"))
  (initrd-modules (append '("i915")
-                         %base-initrd-modules))
+                          %base-initrd-modules))
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (target "/dev/sda")))
@@ -91,6 +98,11 @@
           "libva-utils"
           "intel-vaapi-driver"
           "curl"
+          "mesa"
+          "mesa-headers"
+          "xorg-server"
+          "xf86-video-intel"
+          "libdrm"
           "stow"
           "icecat"
           "next"
