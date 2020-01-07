@@ -72,18 +72,10 @@
   :demand
   :config (load-theme 'sanityinc-tomorrow-eighties t))
 
-;;; Doom modeline
-(use-package doom-modeline
+;;; Mood modeline
+(use-package mood-line
   :config
-  (setq doom-modeline-height 0.95)
-  (set-face-attribute 'mode-line nil :height 95)
-  (set-face-attribute 'mode-line-inactive nil :height 100)
-  (setq doom-modeline-indent-info t
-        doom-modeline-lsp t
-        doom-modeline-env-version t
-        column-number-mode t
-        line-number-mode t)
-  :hook (after-init . doom-modeline-mode))
+  (mood-line-mode))
 
 ;;; Org-mode
 (use-package org
@@ -116,8 +108,7 @@
 <header class=\"navbar\">
 <a href=\"/\" class=\"logo\">@w96k</a>
 <a class=\"button\" href=\"/about.html\">Обо мне</a>
-<a class=\"button\" href=\"https://github.com/w96k/cv/raw/master/cv.pdf\">CV</a>
-<a class=\"button\" href=\"/feed.xml\"><span class=\"icon-rss\"></span></a>
+<a class=\"button\" href=\"/cv.html\">CV</a>
 </header>"
 
            :html-head "
@@ -129,23 +120,25 @@
            :html-container "article"
            :html-postamble "
   <div class=\"row\">
-    <div class=\"col-sm\">
+    <div class=\"col-sm-12 col-md-4\">
       <p class=\"licenses\">
         <a href=\"https://creativecommons.org/licenses/by/4.0/\">
-          <img alt=\"Лицензия Creative Commons\" src=\"https://i.creativecommons.org/l/by/4.0/88x31.png\" />
-        </a>
+          <img alt=\"Лицензия Creative Commons\" src=\"/public/images/cc.png\" />
+</a>
         <a href=\"https://www.gnu.org/licenses/gpl-3.0.txt\">
           <img src=\"/public/images/gpl.png\">
         </a>
      </p>
     </div>
 
-    <div class=\"col-sm\" align=\"center\">
-      <p>© 2020 Mikhail Kirillov</p>
-      <p><a href=\"https://git.sr.ht/~w96k/blog\">Исходный код</a></p>
+    <div id=\"copyright\" class=\"col-sm-12 col-md-4\">
+      <p>© 2020 <i>Mikhail Kirillov</i></p>
+      <p>
+       Сайт работает в <a href=\"https://anybrowser.org/campaign/\">любом браузере</a>
+      </p>
     </div>
 
-    <div class=\"col-sm\" align=\"right\">
+    <div class=\"col-sm-12 col-md-4\" id=\"meta\">
       <p><span class=\"icon-settings\"></span> %c</p>
       <p><span class=\"icon-calendar\"></span> %C</p>
     </div>
@@ -164,7 +157,7 @@
   </div>"
 
            :section-numbers nil
-           ;;:with-sub-superscript nil ;; important!!
+           :with-sub-superscript nil
 
            ;; sitemap - list of blog articles
            :auto-sitemap t
@@ -441,6 +434,9 @@
 
 ;;; Clojure REPL
 (use-package cider)
+
+;;;; Emacs Lisp Helping Libraries
+(use-package s)
 
 ;;;; MISC
 
@@ -727,21 +723,3 @@
 (use-package muse)
 
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-idle-delay 0.1)
- '(company-minimum-prefix-length 1)
- '(company-require-match nil)
- '(company-tooltip-align-annotation t t)
- '(package-selected-packages
-   (quote
-    (simple-httpd web-server ox-twbst ox-twbs org-mode yasnippet-snippets whitespace-cleanup-mode web-mode w3m vue-mode volume use-package-ensure-system-package undo-tree twittering-mode tide theme-magic telega symon sudoku sudo-edit smart-mode-line sed-mode rjsx-mode rinari restclient restart-emacs rainbow-delimiters quelpa-use-package projectile prettier-js powerline pinentry php-mode peep-dired pdf-tools paredit paradox ox-hugo org-pomodoro org-mime org-journal org-bullets nodejs-repl mwim muse moody matrix-client magithub magit-gitflow lsp-ui leerzeichen ledger-mode keycast kaolin-themes ivy-hydra intero highlight-indent-guides hackernews guru-mode git-gutter git-gutter+ frameshot forge flymd flycheck-lilypond fic-mode exwm exec-path-from-shell eslint-fix epresent emojify elpy editorconfig edit-server dumb-jump doom-modeline dockerfile-mode docker disable-mouse dired-sidebar diminish debbugs dashboard dap-mode counsel company-lsp command-log-mode column-enforce-mode color-theme-sanityinc-tomorrow cider benchmark-init all-the-icons-dired aggressive-indent ag))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
