@@ -77,94 +77,6 @@
   :config
   (mood-line-mode))
 
-;;; Org-mode
-(use-package org
-  :config
-  (setq org-publish-project-alist
-        `(("blog" :components ("blog-content" "blog-styles"))
-          ("blog-styles"
-           :base-directory "~/github/blog/public"
-           :base-extension "jpg\\|gif\\|png\\|ico\\|css"
-           :publishing-directory "~/github/blog/dist/public/"
-           :recursive t
-           :publishing-function org-publish-attachment
-           )
-          ("blog-content"
-           :base-directory "~/github/blog/content"
-           :publishing-directory "~/github/blog/dist"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-
-           :html-doctype "xhtml5"
-
-           :with-title nil
-           :with-author t
-           :with-creator nil
-           :with-date t
-           :with-email t
-           :with-footnotes t
-           :html-html5-fancy t
-           :html-preamble "
-<header class=\"navbar\">
-<a href=\"/\" class=\"logo\">@w96k</a>
-<a class=\"button\" href=\"/about.html\">Обо мне</a>
-<a class=\"button\" href=\"/cv.html\">CV</a>
-</header>"
-
-           :html-head "
-<link rel=\"shortcut icon\" href=\"/public/favicon.ico\">
-<link rel=\"stylesheet\" href=\"/public/css/mini.css\" type=\"text/css\"/>
-<link rel=\"stylesheet\" href=\"/public/css/custom.css\" type=\"text/css\"/>
-"
-
-           :html-container "article"
-           :html-postamble "
-  <div class=\"row\">
-    <div class=\"col-sm-12 col-md-4\">
-      <p class=\"licenses\">
-        <a href=\"https://creativecommons.org/licenses/by/4.0/\">
-          <img alt=\"Лицензия Creative Commons\" src=\"/public/images/cc.png\" />
-</a>
-        <a href=\"https://www.gnu.org/licenses/gpl-3.0.txt\">
-          <img src=\"/public/images/gpl.png\">
-        </a>
-     </p>
-    </div>
-
-    <div id=\"copyright\" class=\"col-sm-12 col-md-4\">
-      <p>© 2020 <i>Mikhail Kirillov</i></p>
-      <p>
-       Сайт работает в <a href=\"https://anybrowser.org/campaign/\">любом браузере</a>
-      </p>
-    </div>
-
-    <div class=\"col-sm-12 col-md-4\" id=\"meta\">
-      <p><span class=\"icon-settings\"></span> %c</p>
-      <p><span class=\"icon-calendar\"></span> %C</p>
-    </div>
-  </div>
-
-  <br>
-  <div align=\"center\">
-    <small>
-      <p>Содержимое данного сайта доступно по лицензии
-        <a href=\"https://creativecommons.org/licenses/by/4.0/\">
-          Creative Commons «Attribution» («Атрибуция») 4.0 Всемирная
-        </a>
-      </p>
-      <p>Исходный код данного сайта доступен по лицензии GNU General Public License Version 3</p>
-    </small>
-  </div>"
-
-           :section-numbers nil
-           :with-sub-superscript nil
-
-           ;; sitemap - list of blog articles
-           :auto-sitemap t
-           :sitemap-filename "sitemap.org"
-           :sitemap-title "@w96k"
-           :sitemap-sort-files anti-chronologically))))
-
 (use-package simple-httpd)
 
 ;;; Bullets for org-mode
@@ -440,6 +352,9 @@
 
 ;;;; MISC
 
+;;; Djvu
+(use-package djvu)
+
 ;;; Show last key and command in modeline
 (use-package keycast
   :config (keycast-mode))
@@ -670,7 +585,7 @@
 
 ;;; Disable mouse
 (use-package disable-mouse
-  :diminish 
+  :diminish "NoMouse!"
   :defer 5
   :config (global-disable-mouse-mode))
 
@@ -694,13 +609,6 @@
 
 ;;; Pomodoro technique tracking for org-mode
 (use-package org-pomodoro)
-
-;;; Hugo org exporter
-(use-package ox-hugo
-  :after oxxb
-  :config
-  (setq org-hugo-default-section-directory "posts")
-  (setq HUGO_BASE_DIR "~/github/w96k.gitlab.io/content/"))
 
 ;;; Accounting
 (use-package ledger-mode)
