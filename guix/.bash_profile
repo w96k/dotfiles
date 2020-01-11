@@ -18,12 +18,14 @@ export TERM=rxvt
 
 setxkbmap -layout us,ru -option grp:caps_toggle
 
-#Shepherd (with emacs daemon)
-shepherd &
+sh export GDK_CORE_DEVICE_EVENTS=1
 
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
+
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    . /usr/share/bash-completion/bash_completion
 
 if [ -f .bashrc ]
 then

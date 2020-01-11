@@ -24,11 +24,20 @@ if [ -n "$GUIX_ENVIRONMENT" ]
 then
     PS1='\u@\h \w [env]\$ '
 else
-    PS1='\u@\h \w\$ '
+    PS1='\u \w\$ '
 fi
-alias ls='ls -p --color=auto'
-alias ll='ls -l'
-alias grep='grep --color=auto'
+
+# Colored ls
+export LS_OPTIONS='--color=auto'
+eval "`dircolors`"
+alias ls='ls $LS_OPTIONS'
+
+# Autocomplete bash
+complete -cf sudo
+set -o history
+set -o notify
+shopt -q -s cdspell
+shopt -s autocd
 
 streaming() {
     INRES="1280x720" # input resolution
