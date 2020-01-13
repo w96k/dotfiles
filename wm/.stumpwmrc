@@ -23,6 +23,8 @@
 
 (clx-truetype:cache-fonts)
 
+(print *time-modeline-string*)
+
 (setf *mode-line-pad-x* 20
       *mode-line-pad-y* 8
       *mode-line-timeout* 1
@@ -33,6 +35,7 @@
       *mode-line-border-width* 0
       *transient-border-width* 0
       *mode-line-position* :top
+      *time-modeline-string* "%d.%m.%y %k:%M"
       *window-format* "%m%n%s%t "
       *hidden-window-color* ""
       *cpu-modeline-fmt* "%C"
@@ -64,15 +67,15 @@
 
 
 ;; launch Web browser
-(defcommand next () ()
-  "Start Next or switch to it, if it is already running."
-  (run-or-raise "next" '(:class "Next")))
-(define-key *root-map* (kbd "B") "next")
+;; (defcommand next () ()
+;;   "Start Next or switch to it, if it is already running."
+;;   (run-or-raise "next" '(:class "Next")))
+;; (define-key *root-map* (kbd "B") "next")
 
 (defcommand icecat () ()
   "Start Next or switch to it, if it is already running."
   (run-or-raise "icecat" '(:class "IceCat")))
-(define-key *root-map* (kbd "b") "icecat")
+(define-key *root-map* (kbd "B") "icecat")
 
 ;; launch terminal
 (defcommand urxvt () ()
@@ -134,10 +137,16 @@
 
 ;; Menu
 (setq app-menu:*app-menu*
-      '(("Telegram" "telegram-desktop")
+      '(("Midnight Commander" "mc ~")
+        ("Telegram" "telegram-desktop")
         ("Icecat" icecat)
         ("Next" next)
         ("Terminal" urxvt)
         ("Deluge" "deluge")))
 
 (define-key *root-map* (kbd "q") "show-menu")
+
+;; Show / Hide mode-line
+(define-key *root-map* (kbd "M") "mode-line")
+
+(set-font (make-instance 'xft:font :font "-*-terminus-medium-r-*-*-*-125-75-75-*-*-iso8859-15")

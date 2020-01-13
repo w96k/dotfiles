@@ -10,7 +10,10 @@
   (setq gc-cons-threshold 500000000)
 
     ;;; Set font
-  (add-to-list 'default-frame-alist '(font . "terminus-12"))
+  (add-to-list 'default-frame-alist '(font . "terminus-10"))
+  (set-face-attribute 'default nil :font "-*-terminus-medium-r-*-*-*-125-75-75-*-*-iso8859-15")
+  (setq-default line-spacing 0)
+  
 
   ;;; Disable emacs gui
   (menu-bar-mode -1)

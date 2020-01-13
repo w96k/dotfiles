@@ -6,7 +6,7 @@ URxvt.termName: rxvt
 *.cursorColor:  #aeafad
 
 ! Black / Grey
-*.color0:       #000000
+*.color0:       #999999
 *.color8:       #666666
 
 ! Red / Bright Red
@@ -38,11 +38,16 @@ URxvt.termName: rxvt
 *.color15:      #393939
 
 ! URxvt
-urxvt*font: xft:terminus:pixelsize=14:autohint=true
+URxvt.font: xft:terminus:pixelsize=14
 URxvt.scrollBar: false
 URxvt.perl-ext-common: default,selection-to-clipboard,pasta,matcher,keyboard-select
 URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.underlineURLs:  True
+URxvt.cursorBlink: True
+Urxvt.cursorUnderline: True
+Urxvt.visualBell: True
+Urxvt.fading: 50
+Urxvt.fadeColor: #ff0000
 
 Xft.autohint: 0
 Xft.lcdfilter: lcddefault
