@@ -14,7 +14,7 @@
                      web
                      docker)
 
-(use-package-modules geo linux)
+(use-package-modules geo linux bash)
 
 ;; Run powertop --autotune on boot
 (define %powertop-service
@@ -40,6 +40,8 @@
    ;; It's needed by many bash scripts
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
+   (extra-special-file "/bin/bash"
+                       (file-append bash "/bin/bash"))
    ;;%powertop-service
    %desktop-services))
 
@@ -94,6 +96,8 @@
   (append
    (map specification->package
         '(
+          "bash"
+          "bash-completion"
           "libva"
           "libva-utils"
           "intel-vaapi-driver"
