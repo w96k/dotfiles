@@ -19,7 +19,7 @@
 (load-module "shell-command-history")
 (load-module "app-menu")
 ;;(load-module "screenshot")
-(load-module "ttf-fonts")
+;;(load-module "ttf-fonts")
 
 (clx-truetype:cache-fonts)
 
@@ -149,4 +149,4 @@
 ;; Show / Hide mode-line
 (define-key *root-map* (kbd "M") "mode-line")
 
-(set-font (make-instance 'xft:font :font "-*-terminus-medium-r-*-*-*-125-75-75-*-*-iso8859-15")
+
