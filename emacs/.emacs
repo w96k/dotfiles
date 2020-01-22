@@ -77,8 +77,7 @@
 
 ;;; Mood modeline
 (use-package mood-line
-  :config
-  (mood-line-mode))
+  :hook (after-init . mood-line-mode))
 
 (use-package simple-httpd)
 
@@ -355,6 +354,9 @@
 
 ;;;; MISC
 
+;;; htmlize
+(use-package htmlize)
+
 ;;; Djvu
 (use-package djvu)
 
@@ -517,10 +519,6 @@
   :demand
   :config (pdf-loader-install))
 
-;;; Twitter
-(use-package twittering-mode
-  :config (setq twittering-use-master-password t))
-
 ;;; Short messages
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -629,8 +627,5 @@
 
 ;;; Flycheck lilypond
 (use-package flycheck-lilypond)
-
-;;; Publishing system
-(use-package muse)
 
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
