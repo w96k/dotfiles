@@ -132,14 +132,18 @@
 
 ;;; Live-checking text
 (use-package flycheck
+  :init (global-flycheck-mode)
   :config
-  (add-hook 'after-init-hook #'global-flycheck-mode)
   (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
   (setq-default flycheck-disabled-checkers
                 (append flycheck-disabled-checkers
                         '(javascript-jshint)))
   (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (setq-default flycheck-temp-prefix ".flycheck"))
+  (setq-default flycheck-temp-prefix ".flycheck")
+  (custom-set-variables
+   '(flycheck-python-flake8-executable "python3")
+   '(flycheck-python-pycompile-executable "python3")
+   '(flycheck-python-pylint-executable "python3")))
 
 ;;; No tabs
 (setq-default indent-tabs-mode nil)
@@ -237,14 +241,27 @@
 ;;;; LANGUAGES
 
 ;;; Python
-(use-package elpy
-  :init
-  (elpy-enable)
-  :config
-  (setq elpy-rpc-python-command "python3")
-  (when (load "flycheck" t t)
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    (add-hook 'elpy-mode-hook 'flycheck-mode)))
+;; (use-package elpy
+;;   :init
+;;   (elpy-enable)
+;;   :config
+;;   (setq python-shell-interpreter "python3")
+;;   (setq elpy-rpc-python-command "python3")
+;;   (when (load "flycheck" t t)
+;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
+
+(use-package anaconda-mode
+  :hook (python-mode . anaconda-mode)
+  :config (setq python-shell-interpreter "python3"))
+
+(use-package company-anaconda
+  :after company
+  :config (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+
+(use-package company-jedi
+  :after company
+  :config  (add-to-list 'company-backends 'company-jedi))
 
 ;;; Vue
 (use-package vue-mode
