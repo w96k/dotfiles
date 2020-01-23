@@ -55,7 +55,7 @@
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
- (kernel linux-libre-4.19)
+ ;;(kernel linux-libre-4.19)
  (kernel-arguments '("processor.max_cstate=1"  ;Disable power savings
                      "intel_idle.max_cstate=0" ;(cstate 3-4 provides
                                                ;high freq cpu noice)
@@ -139,6 +139,10 @@
           "rxvt-unicode"
           "node"
           "ruby"
+          "python"
+          "python-virtualenv"
+          "python-jedi"
+          "python-ipython"
           "bundler"
           "sbcl"
           "docker"
