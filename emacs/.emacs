@@ -52,6 +52,8 @@
 
 (use-package use-package-ensure-system-package :ensure)
 
+(use-package use-package-hydra)
+
 (add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/")
 
 ;; Information about me
@@ -168,6 +170,16 @@
   :ensure t
   :init (global-git-gutter+-mode)
   :config
+  (setq git-gutter+-window-width 1)
+  (set-face-background 'git-gutter+-added "#99cc99")
+  (set-face-background 'git-gutter+-deleted "#f2777a")
+  (set-face-background 'git-gutter+-modified "#ffcc66")
+  (set-face-background 'git-gutter+-unchanged "#393939")
+  (setq git-gutter+-added-sign " ")
+  (setq git-gutter+-modified-sign " ")
+  (setq git-gutter+-deleted-sign " ")
+  (setq git-gutter+-unchanged-sign " ")
+
   (progn
     (define-key git-gutter+-mode-map (kbd "C-x n") 'git-gutter+-next-hunk)
     (define-key git-gutter+-mode-map (kbd "C-x p") 'git-gutter+-previous-hunk)
