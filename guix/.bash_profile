@@ -16,7 +16,7 @@ export GUIX_PACKAGE_PATH=~/.guix-packages
 
 export TERM=rxvt
 
-setxkbmap -layout us,ru -option grp:caps_toggle
+setxkbmap -layout us,ru -option grp:win_space_toggle -option 'ctrl:nocaps'
 
 sh export GDK_CORE_DEVICE_EVENTS=1
 

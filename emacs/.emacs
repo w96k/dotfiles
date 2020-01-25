@@ -623,3 +623,5 @@
 
 ;;; Flycheck lilypond
 (use-package flycheck-lilypond)
+
+(setq whitespace-style '(face lines-tail))
