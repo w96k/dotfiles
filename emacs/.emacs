@@ -82,19 +82,12 @@
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  
-  ;; or for treemacs users
-  (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
-  (doom-themes-treemacs-config)
-  
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config)
-  (load-theme 'doom-tomorrow-night t))
+  (doom-themes-visual-bell-config))
 
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :demand
-;;   :config (load-theme 'sanityinc-tomorrow-eighties t))
+
+(use-package color-theme-sanityinc-tomorrow
+  :demand
+  :config (load-theme 'sanityinc-tomorrow-eighties t))
 
 (use-package simple-httpd)
 
@@ -170,10 +163,6 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
-;;; Magit forge (magit integration with git hostings)
-(use-package forge
-  :after magit)
-
 ;;; Git flow
 (use-package magit-gitflow
   :after magit
@@ -235,6 +224,13 @@
   :diminish helm-mode
   :config
   (require 'helm-config)
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match    t)
+  (setq helm-semantic-fuzzy-match t
+        helm-imenu-fuzzy-match    t)
+  (setq helm-locate-fuzzy-match t)
+  (setq helm-apropos-fuzzy-match t)
+  (setq helm-lisp-fuzzy-completion t)
   (define-key helm-map (kbd "<tab>")    'helm-execute-persistent-action)
   (define-key helm-map (kbd "S-<tab>") 'helm-select-action)
   (helm-mode))
@@ -574,11 +570,18 @@
   :ensure t
   :hook (after-init . doom-modeline-mode)
   :config
-  (setq doom-modeline-height 22)
   (setq doom-modeline-bar-width 8)
   (setq inhibit-compacting-font-caches t)
   (setq find-file-visit-truename t)
-  
+  (setq doom-modeline-project-detection 'project)
+  (setq doom-modeline-icon t)
+  (setq doom-modeline-buffer-modification-icon nil)
+  (setq doom-modeline-major-mode-icon nil)
+  (setq doom-modeline-buffer-state-icon nil)
+  (setq doom-modeline-minor-modes nil)
+  (setq doom-modeline-major-mode-color-icon nil)
+  (set-face-attribute 'mode-line nil :height 100)
+  (set-face-attribute 'mode-line-inactive nil :height 100)
   (setq doom-modeline-height 1))
 
 (setq create-lockfiles nil)
@@ -621,22 +624,3 @@
 (use-package flycheck-lilypond)
 
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(company-idle-delay 0.1)
- '(company-minimum-prefix-length 1)
- '(company-require-match nil)
- '(company-tooltip-align-annotation t t)
- '(flycheck-python-flake8-executable "python3")
- '(flycheck-python-pycompile-executable "python3")
- '(flycheck-python-pylint-executable "python3")
- '(package-selected-packages (quote (ag))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
