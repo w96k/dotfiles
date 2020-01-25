@@ -66,10 +66,11 @@
 
 ;;; Color parens
 (use-package rainbow-delimiters
-    :hook ((prog-mode . rainbow-delimiters-mode)))
+  :hook ((prog-mode . rainbow-delimiters-mode)))
 
 ;;; Display numbers
-(global-display-line-numbers-mode)
+(setq display-line-numbers 'relative)
+;;(global-display-line-numbers-mode)
 
 ;;; Display current line
 (global-hl-line-mode)
@@ -405,7 +406,7 @@
     (exec-path-from-shell-copy-env "PATH")))
 
 ;; Kill whole line
-(global-set-key (kbd "C-u") 'kill-whole-line)
+(global-set-key (kbd "C-k") 'kill-whole-line)
 
 ;;; Volume management using thinkpad volume buttons
 (use-package volume
@@ -574,7 +575,7 @@
   (setq inhibit-compacting-font-caches t)
   (setq find-file-visit-truename t)
   (setq doom-modeline-project-detection 'project)
-  (setq doom-modeline-icon t)
+  (setq doom-modeline-icon nil)
   (setq doom-modeline-buffer-modification-icon nil)
   (setq doom-modeline-major-mode-icon nil)
   (setq doom-modeline-buffer-state-icon nil)
@@ -622,5 +623,3 @@
 
 ;;; Flycheck lilypond
 (use-package flycheck-lilypond)
-
-;; (global-set-key [(control ?h)] 'delete-backward-char)
