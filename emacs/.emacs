@@ -5,6 +5,8 @@
 
 ;;;; INIT
 
+;;; -*- lexical-binding: t; -*-
+
 (eval-when-compile
   ;; increase GC-limit up to 100M for boot speedup
   (setq gc-cons-threshold 500000000)
@@ -47,7 +49,7 @@
   :defer nil
   :config
   (setq use-package-verbose t)
-  (setq use-package-always-defer t)
+  (setq use-package-always-defer nil)
   (setq use-package-always-ensure t))
 
 (use-package use-package-ensure-system-package :ensure)
@@ -73,13 +75,26 @@
 (global-hl-line-mode)
 
 ;;; Set Theme
-(use-package color-theme-sanityinc-tomorrow
-  :demand
-  :config (load-theme 'sanityinc-tomorrow-eighties t))
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
-;;; Mood modeline
-(use-package mood-line
-  :hook (after-init . mood-line-mode))
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  
+  ;; or for treemacs users
+  (setq doom-themes-treemacs-theme "doom-colors") ; use the colorful treemacs theme
+  (doom-themes-treemacs-config)
+  
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config)
+  (load-theme 'doom-tomorrow-night t))
+
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :demand
+;;   :config (load-theme 'sanityinc-tomorrow-eighties t))
 
 (use-package simple-httpd)
 
@@ -111,7 +126,8 @@
          ("M-g i" . dumb-jump-go-prompt)
          ("M-g x" . dumb-jump-go-prefer-external)
          ("M-g z" . dumb-jump-go-prefer-external-other-window))
-  :config (setq dumb-jump-selector 'ivy) ;; (setq dumb-jump-selector 'helm)
+  :config (setq dumb-jump-selector 'ivy)
+  (setq dumb-jump-selector 'helm)
   :ensure)
 
 (progn
@@ -152,9 +168,7 @@
 
 ;;; Version control
 (use-package magit
-  :defer 2
-  :bind ("C-x g" . magit-status)
-  :config (setq magit-refresh-status-buffer nil))
+  :bind ("C-x g" . magit-status))
 
 ;;; Magit forge (magit integration with git hostings)
 (use-package forge
@@ -197,43 +211,37 @@
   :config (global-aggressive-indent-mode))
 
 ;;; 80 column width limit highlighter
-(use-package column-enforce-mode
-  :defer t
-  :diminish
-  :config (80-column-rule)
-  :hook (prog-mode . column-enforce-mode))
+;; (use-package column-enforce-mode
+;;   :diminish
+;;   :config (80-column-rule)
+;;   :hook (prog-mode . column-enforce-mode))
 
-;;; General autocomplete
-(use-package ivy
-  :demand
-  :diminish
+;;; Autocomplete and search
+(use-package helm
+  :ensure t
+  :init
+  :bind (("M-l" . helm-mini)
+         ("M-L" . helm-browse-project)
+         ("M-i" . helm-occur)
+         ("M-I" . helm-do-grep-ag)
+         ("C-o" . helm-imenu)
+         
+         ("M-x" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("M-y" . helm-show-kill-ring)
+         ("C-z" . helm-resume)
+         ("C-h a" . helm-apropos)
+         ("C-c f l" . helm-locate-library))
+  :diminish helm-mode
   :config
-  (ivy-mode)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
-  (global-set-key "\C-s" 'swiper)
-  (global-set-key (kbd "C-c C-r") 'ivy-resume)
-  (global-set-key (kbd "<f6>") 'ivy-resume))
+  (require 'helm-config)
+  (define-key helm-map (kbd "<tab>")    'helm-execute-persistent-action)
+  (define-key helm-map (kbd "S-<tab>") 'helm-select-action)
+  (helm-mode))
 
-(use-package counsel
-  :demand
-  :config
-  (global-set-key (kbd "M-x") 'counsel-M-x)
-  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
-  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
-  (global-set-key (kbd "<f1> l") 'counsel-find-library)
-  (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
-  (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
-  (global-set-key (kbd "C-c g") 'counsel-git)
-  (global-set-key (kbd "C-c j") 'counsel-git-grep)
-  (global-set-key (kbd "C-x b") 'counsel-ibuffer)
-  (global-set-key (kbd "C-c k") 'counsel-ag)
-  (global-set-key (kbd "C-x l") 'counsel-locate)
-  (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
-  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
-
-(use-package ivy-hydra)
+(use-package helm-ag
+  :after helm
+  :bind ("C-s" . helm-do-ag-this-file))
 
 (use-package company
   :demand
@@ -252,17 +260,6 @@
 
 ;;;; LANGUAGES
 
-;;; Python
-;; (use-package elpy
-;;   :init
-;;   (elpy-enable)
-;;   :config
-;;   (setq python-shell-interpreter "python3")
-;;   (setq elpy-rpc-python-command "python3")
-;;   (when (load "flycheck" t t)
-;;     (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-;;     (add-hook 'elpy-mode-hook 'flycheck-mode)))
-
 (use-package anaconda-mode
   :hook (python-mode . anaconda-mode)
   :config (setq python-shell-interpreter "python3"))
@@ -270,6 +267,12 @@
 (use-package company-anaconda
   :after company
   :config (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+
+(use-package pydoc
+  :commands pydoc
+  :config (setq pydoc-command "python3 -m pydoc"))
+
+(use-package helm-pydoc)
 
 (use-package company-jedi
   :after company
@@ -367,14 +370,6 @@
 ;;; Typescript support
 (use-package typescript-mode)
 
-(use-package tide
-  :ensure t
-  :diminish
-  :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (typescript-mode . tide-hl-identifier-mode)
-         (before-save . tide-format-before-save)))
-
 ;;; Clojure REPL
 (use-package cider)
 
@@ -390,15 +385,10 @@
 (use-package djvu)
 
 ;;; Show last key and command in modeline
-(use-package keycast
-  :config (keycast-mode))
+(use-package keycast)
 
 ;;; IRC
-(use-package erc
-  :config
-  (erc-autojoin-enable)
-  (setq erc-autojoin-channels-alist
-        '(("freenode.net" "#emacs" "#wiki" "#next-browser"))))
+(use-package erc)
 
 ;;; Show TODO, FIX in comments
 (use-package fic-mode)
@@ -443,14 +433,6 @@
 
 (use-package command-log-mode)
 
-;;; Benchmark init
-(use-package benchmark-init
-  :demand
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;;; Bug-Tracker DebBugs
 (use-package debbugs)
 
@@ -469,7 +451,7 @@
 ;;; Sidebar File-Manager
 (use-package dired-sidebar
   :after exwm
-  :bind (("C-x C-n" . dired-sidebar-toggle-sidebar))
+  :bind (("C-x C-d" . dired-sidebar-toggle-sidebar))
   :diminish
   :after all-the-icons
   :commands (dired-sidebar-toggle-sidebar)
@@ -509,14 +491,6 @@
                 ("MEETING" :foreground "forest cyan" :weight bold)
                 ("PHONE" :foreground "blue" :weight bold)))))
 
-;;; Smart mode line
-(use-package smart-mode-line
-  :demand
-  :config
-  (setq sml/no-confirm-load-theme t)
-  (setq sml/theme 'respectful)
-  (sml/setup))
-
 ;;; Delete trailing whitespace on save
 (use-package whitespace-cleanup-mode
   :diminish
@@ -539,9 +513,6 @@
   :diminish
   :config (guru-global-mode +1))
 
-;;; Hackernews
-(use-package hackernews)
-
 ;;; PDF Tools
 (use-package pdf-tools
   :if window-system
@@ -559,17 +530,6 @@
 
 (save-place-mode 1)
 
-;;; Show Emoji in emacs
-(use-package emojify
-  :if window-system
-  :config (add-hook 'after-init-hook #'global-emojify-mode))
-
-
-;;; Server for editing web-forms in emacs
-(use-package edit-server
-  :if window-system
-  :config (edit-server-start))
-
 ;;; Markdown preview
 (use-package flymd)
 
@@ -581,9 +541,6 @@
   "to be run as hook for `dired-mode'."
   (dired-hide-details-mode 1))
 (add-hook 'dired-mode-hook 'dired-mode-setup)
-
-;;; Dired Ranger like
-(use-package peep-dired)
 
 ;;; Project Management
 (use-package projectile
@@ -606,19 +563,23 @@
 ;;; Parens colorizing
 (use-package rainbow-delimiters)
 
-;;; Break line at 80 symbols
-(use-package visual-fill-column
-  :config
-  (setq fill-column 80)
-  (global-visual-fill-column-mode)
-  (global-visual-line-mode))
-
 ;;; Disable mouse
 (use-package disable-mouse
-  :diminish "NoMouse!"
-  :defer 5
   :config (global-disable-mouse-mode))
 
+;; (use-package mood-line
+;;   :config (mood-line-mode))
+
+(use-package doom-modeline
+  :ensure t
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-height 22)
+  (setq doom-modeline-bar-width 8)
+  (setq inhibit-compacting-font-caches t)
+  (setq find-file-visit-truename t)
+  
+  (setq doom-modeline-height 1))
 
 (setq create-lockfiles nil)
 (setq
@@ -649,12 +610,33 @@
 ;;; Lilypond
 (progn
   (autoload 'lilypond "lilypond")
-   (autoload 'lilypond-mode "lilypond-mode")
-   (setq auto-mode-alist
-         (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
-   (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+  (autoload 'lilypond-mode "lilypond-mode")
+  (setq auto-mode-alist
+        (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+  (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+
+(column-number-mode)
 
 ;;; Flycheck lilypond
 (use-package flycheck-lilypond)
 
 ;; (global-set-key [(control ?h)] 'delete-backward-char)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-idle-delay 0.1)
+ '(company-minimum-prefix-length 1)
+ '(company-require-match nil)
+ '(company-tooltip-align-annotation t t)
+ '(flycheck-python-flake8-executable "python3")
+ '(flycheck-python-pycompile-executable "python3")
+ '(flycheck-python-pylint-executable "python3")
+ '(package-selected-packages (quote (ag))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
