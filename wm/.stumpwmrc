@@ -25,13 +25,13 @@
 
 (print *time-modeline-string*)
 
-(setf *mode-line-pad-x* 20
+(setf *mode-line-pad-x* 8
       *mode-line-pad-y* 8
       *mode-line-timeout* 1
       *mouse-focus-policy* :click
-      *window-border-style* :thin
+      *window-border-style* :tight
       *message-window-gravity* :center
-      *normal-border-width* 8
+      *normal-border-width* 0
       *mode-line-border-width* 0
       *transient-border-width* 0
       *mode-line-position* :top
@@ -57,13 +57,6 @@
                                  ;; Date
                                  "%d"
                                  ))
-
-;; Colors
-(set-bg-color "#1C2028")
-(set-border-color "#666666")
-(set-focus-color "#6699cc")
-(set-unfocus-color "#2d2d2d")
-(set-win-bg-color "#2d2d2d")
 
 
 ;; launch Web browser
@@ -106,7 +99,7 @@
 (load-module "swm-gaps")
 (setf swm-gaps:*inner-gaps-size* 8)
 (setf swm-gaps:*outer-gaps-size* 4)
-(swm-gaps:toggle-gaps)
+;;(swm-gaps:toggle-gaps)
 
 ;; Golden Ratio
 ;;(load-module "swm-golden-ratio")
