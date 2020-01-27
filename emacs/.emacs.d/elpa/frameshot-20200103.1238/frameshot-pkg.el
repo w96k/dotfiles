@@ -1,0 +1,2 @@
+;;; Generated package description from /home/w96k/.emacs.d/elpa/frameshot-20200103.1238/frameshot.el  -*- no-byte-compile: t -*-
+(define-package "frameshot" "20200103.1238" "Take screenshots of a frame" '((emacs "25.3")) :commit "1b5974f0cc7c2a34e5f9fab6b25578dad7df3dbf" :authors '(("Jonas Bernoulli" . "jonas@bernoul.li")) :maintainer '("Jonas Bernoulli" . "jonas@bernoul.li") :url "https://github.com/tarsius/frameshot")

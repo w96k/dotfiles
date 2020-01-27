@@ -1,0 +1,31 @@
+
+;; ----- amx-history -----
+(
+ package-install
+ eval-buffer
+ httpd-serve-directory
+ isearch-char-by-name
+ ace-jump-mode-pop-mark
+ ace-jump-mode
+ mouse-avoidance-mode
+)
+
+;; ----- amx-data -----
+(
+ (icomplete-mode . 2)
+ (mood-line-mode . 1)
+ (package-install . 3)
+ (flex-isearch-mode . 1)
+ (global-flex-isearch-mode . 1)
+ (flex-isearch-forward . 1)
+ (package-delete . 1)
+ (winner-mode . 1)
+ (imenu . 2)
+ (browse-kill-ring . 1)
+ (mouse-avoidance-mode . 2)
+ (ace-jump-mode . 2)
+ (ace-jump-mode-pop-mark . 1)
+ (isearch-char-by-name . 1)
+ (httpd-serve-directory . 1)
+ (eval-buffer . 1)
+)

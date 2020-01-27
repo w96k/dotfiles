@@ -1,0 +1,2 @@
+;;; Generated package description from /home/w96k/.emacs.d/elpa/flycheck-lilypond-20171203.1332/flycheck-lilypond.el  -*- no-byte-compile: t -*-
+(define-package "flycheck-lilypond" "20171203.1332" "LilyPond support in Flycheck" '((emacs "24.3") (flycheck "0.22")) :commit "cc1b7677a932c42e5dab1661ad7b923d4aae744c" :keywords '("tools" "convenience") :authors '(("Hinrik Örn Sigurðsson" . "hinrik.sig@gmail.com")) :maintainer '("Hinrik Örn Sigurðsson" . "hinrik.sig@gmail.com") :url "https://github.com/hinrik/flycheck-lilypond")

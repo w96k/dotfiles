@@ -1,0 +1,2 @@
+;;; Generated package description from /home/w96k/.emacs.d/elpa/keycast-20200103.1239/keycast.el  -*- no-byte-compile: t -*-
+(define-package "keycast" "20200103.1239" "Show current command and its key in the mode line" '((emacs "25.3")) :commit "adb55497c0f16e90069d6e5e86b4f9f65f13624b" :authors '(("Jonas Bernoulli" . "jonas@bernoul.li")) :maintainer '("Jonas Bernoulli" . "jonas@bernoul.li") :url "https://github.com/tarsius/keycast")

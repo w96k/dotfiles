@@ -1,0 +1,628 @@
+* Конфигурация Emacs
+** Обо мне
+#+BEGIN_SRC emacs-lisp
+;; Information about me
+(setq user-full-name "Mikhail Kirillov"
+      user-mail-address "w96k@posteo.net")
+#+END_SRC
+
+** Внешний вид
+*** Назначение шрифта
+А также отступа между строк
+#+BEGIN_SRC emacs-lisp
+;;; Set font
+(add-to-list 'default-frame-alist '(font . "terminus-10"))
+(set-face-attribute 'default nil :font "-*-terminus-medium-r-*-*-*-125-75-75-*-*-iso8859-15")
+(setq-default line-spacing 0)
+#+END_SRC
+
+*** Назначение темы
+Вы ее в видите в блоках кода
+#+BEGIN_SRC emacs-lisp
+;;; Load a theme
+;;; https://emacsthemes.com/themes/sanityinc-tomorrow-themes.html
+(use-package color-theme-sanityinc-tomorrow
+  :demand
+  :config (load-theme 'sanityinc-tomorrow-eighties t))
+#+END_SRC
+
+*** Отображение номера строк
+#+BEGIN_SRC emacs-lisp  
+;;; Display numbers
+(use-package display-line-numbers
+  :ensure
+  :init
+  (global-display-line-numbers-mode)
+  (setq display-line-numbers 'relative
+        display-line-numbers-current-absolute t)
+  (global-set-key (kbd "C-c l") 'global-display-line-numbers-mode))
+#+END_SRC
+*** Мод-лайн
+#+BEGIN_SRC emacs-lisp
+  (use-package mood-line
+    :config (mood-line-mode))
+#+END_SRC
+*** Подсвечивать текущую строку
+#+BEGIN_SRC emacs-lisp
+;;; Display current line
+(global-hl-line-mode)
+#+END_SRC
+
+*** Иконки
+#+BEGIN_SRC emacs-lisp
+;;; Icons
+(use-package all-the-icons
+  :if window-system)
+#+END_SRC
+** Редактирование кода в общем
+*** Линтер Flycheck
+#+BEGIN_SRC emacs-lisp
+;;; Live-checking text
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config
+  (setq-default flycheck-temp-prefix ".flycheck")
+  (custom-set-variables
+   '(flycheck-python-flake8-executable "python3")
+   '(flycheck-python-pycompile-executable "python3")
+   '(flycheck-python-pylint-executable "python3")))
+#+END_SRC
+
+*** Дерево отмен
+#+BEGIN_SRC emacs-lisp
+;;; Undo system
+(use-package undo-tree
+  :diminish
+  :commands
+  (global-undo-tree-mode)
+  :init
+  (setq
+   undo-tree-visualizer-timestamps t
+   undo-tree-enable-undo-in-region nil
+   undo-tree-history-directory-alist
+   `(("." . ,(expand-file-name "undo" user-emacs-directory))))
+  (global-undo-tree-mode))
+#+END_SRC
+
+*** Автоформатирование
+#+BEGIN_SRC emacs-lisp
+;;; Autoformatting code
+(use-package aggressive-indent
+  :config (global-aggressive-indent-mode))
+#+END_SRC
+*** Система контроля версий
+**** Magit
+Фронт для гита
+#+BEGIN_SRC emacs-lisp
+;;; Version control
+(use-package magit
+  :bind ("C-x g" . magit-status))
+#+END_SRC
+**** Git Flow
+#+BEGIN_SRC emacs-lisp
+;;; Git flow
+(use-package magit-gitflow
+  :after magit
+  :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
+#+END_SRC
+**** Пометки о модифицированных строках
+     Если строка добавлена, удалена или отредактирована относительно
+     текущего git проекта, то строка помечается зеленым, красным или
+     желтым цветом соответственно.
+
+#+BEGIN_SRC emacs-lisp
+;;; Show added & removed git lines
+(use-package git-gutter+
+  :ensure t
+  :init (global-git-gutter+-mode)
+  :config
+  (setq git-gutter+-window-width 1)
+  (set-face-background 'git-gutter+-added "#99cc99")
+  (set-face-background 'git-gutter+-deleted "#f2777a")
+  (set-face-background 'git-gutter+-modified "#ffcc66")
+  (set-face-background 'git-gutter+-unchanged "#393939")
+  (setq git-gutter+-added-sign " ")
+  (setq git-gutter+-modified-sign " ")
+  (setq git-gutter+-deleted-sign " ")
+  (setq git-gutter+-unchanged-sign " ")
+
+  (progn
+    (define-key git-gutter+-mode-map (kbd "C-x n") 'git-gutter+-next-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x p") 'git-gutter+-previous-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x v =") 'git-gutter+-show-hunk)
+    (define-key git-gutter+-mode-map (kbd "C-x r") 'git-gutter+-revert-hunks)
+    (define-key git-gutter+-mode-map (kbd "C-x t") 'git-gutter+-stage-hunks)
+    (define-key git-gutter+-mode-map (kbd "C-x c") 'git-gutter+-commit)
+    (define-key git-gutter+-mode-map (kbd "C-x C") 'git-gutter+-stage-and-commit)
+    (define-key git-gutter+-mode-map (kbd "C-x C-y") 'git-gutter+-stage-and-commit-whole-buffer)
+    (define-key git-gutter+-mode-map (kbd "C-x U") 'git-gutter+-unstage-whole-buffer))
+  :diminish (git-gutter+-mode . "gg"))
+#+END_SRC
+*** Буфер обмена
+#+BEGIN_SRC emacs-lisp
+  (use-package browse-kill-ring 
+    :config (browse-kill-ring-default-keybindings))
+#+END_SRC
+*** Прыжки
+#+BEGIN_SRC emacs-lisp
+(use-package ace-jump-mode
+  :config 
+  (define-key global-map (kbd "C-c s") 'ace-jump-mode))
+#+END_SRC
+*** Поиск (ido + amx + swiper)
+    Я использовал раньше ivy, councel и swiper.
+    Helm слишком тяжелый для моих нужд.
+#+BEGIN_SRC emacs-lisp
+(use-package ido
+    :config
+    (setq ido-enable-flex-matching t)
+    (setq ido-everywhere t)
+    (setq ido-use-ilename-at-point 'guess)
+    (ido-mode)
+    (ido-vertical-mode)
+    (setq ido-vertical-define-keys 'C-n-and-C-p-only))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ido-completing-read+
+    :after ido
+    :config
+    (ido-ubiquitous-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package amx
+    :config
+    (amx-mode))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :config
+    (global-set-key "\C-s" 'swiper))
+#+END_SRC
+
+*** Автодополнение
+#+BEGIN_SRC emacs-lisp
+(use-package company
+  :demand
+  :diminish
+  :custom
+  (company-require-match nil)
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.1)
+  (company-tooltip-align-annotation t)
+  :hook ((prog-mode . company-mode))
+  :config
+  (add-hook 'after-init-hook 'global-company-mode)
+  :bind (:map company-active-map
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous)))
+
+
+(use-package company-quickhelp
+  :after company)
+#+END_SRC
+*** Проекты
+#+BEGIN_SRC emacs-lisp
+;;; Project Management
+(use-package projectile
+  :diminish
+  :bind (("s-p" . projectile-command-map)
+         ("C-c p" . projectile-command-map))
+  :config
+  (projectile-global-mode))
+#+END_SRC
+*** Переход к определению
+#+BEGIN_SRC emacs-lisp
+;;; Jump to defenition
+(use-package dumb-jump
+  :bind (("M-g o" . dumb-jump-go-other-window)
+         ("M-g j" . dumb-jump-go)
+         ("M-g i" . dumb-jump-go-prompt)
+         ("M-g x" . dumb-jump-go-prefer-external)
+         ("M-g z" . dumb-jump-go-prefer-external-other-window))
+  :config (setq dumb-jump-selector 'ivy)
+  (setq dumb-jump-selector 'helm)
+  :ensure)
+#+END_SRC
+
+*** Ширина строки -- 80 символов
+#+BEGIN_SRC emacs-lisp
+  ;;; 80 column width limit highlighter
+  (use-package column-enforce-mode
+    :diminish
+    :config (80-column-rule)
+    :hook (prog-mode . column-enforce-mode))
+#+END_SRC
+*** Подсвечивание парных скобок
+#+BEGIN_SRC emacs-lisp
+;;; Show pair for a parenthesis
+(show-paren-mode)
+#+END_SRC
+
+*** Ввод парных скобок и кавычек
+#+BEGIN_SRC emacs-lisp
+;;; Input of pair delimiters
+(electric-pair-mode)
+#+END_SRC
+*** Навигация
+**** Настройка Dired
+**** Иконки Dired
+#+BEGIN_SRC emacs-lisp
+;;; Icons for dired
+(use-package all-the-icons-dired
+  :if window-system
+  :diminish
+  :after all-the-icons
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+#+END_SRC
+
+*** Сниппеты
+#+BEGIN_SRC emacs-lisp
+;;; Yasnippet
+(use-package yasnippet
+  :demand
+  :diminish
+  :init (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :diminish
+  :after yasnippet)
+#+END_SRC
+*** Изменённое поведение биндов C-a и C-e
+#+BEGIN_SRC emacs-lisp
+;;; Change Move to end & beginning of the line behavior
+(use-package mwim
+  :config
+  (global-set-key (kbd "C-a") 'mwim-beginning)
+  (global-set-key (kbd "C-e") 'mwim-end))
+#+END_SRC
+*** Удаление лишних пробелов при сохранении
+#+BEGIN_SRC emacs-lisp
+;;; Delete trailing whitespace on save
+(use-package whitespace-cleanup-mode
+  :diminish
+  :config (global-whitespace-cleanup-mode))
+#+END_SRC
+*** EditorConfig
+#+BEGIN_SRC emacs-lisp
+;;; Editor Config support
+(use-package editorconfig
+  :ensure t
+  :diminish
+  :config
+  (editorconfig-mode 1))
+#+END_SRC
+*** Редактирование суперпользователем
+#+BEGIN_SRC emacs-lisp
+;;; Edit with root user
+(use-package sudo-edit)
+#+END_SRC
+** Языки программирования
+*** LISP
+**** Разукрашивание скобок в лиспах
+#+BEGIN_SRC emacs-lisp
+;;; Color parens
+(use-package rainbow-delimiters
+  :hook ((prog-mode . rainbow-delimiters-mode)))
+#+END_SRC
+
+**** Редактирование скобок
+#+BEGIN_SRC emacs-lisp
+;;; Parens editing
+(use-package paredit)
+#+END_SRC
+**** Библиотеки
+***** Работа со строками
+#+BEGIN_SRC emacs-lisp
+;;; Emacs Lisp string manipulation
+(use-package s)
+#+END_SRC
+*** Python
+**** Anaconda
+#+BEGIN_SRC emacs-lisp
+(use-package anaconda-mode
+  :hook (python-mode . anaconda-mode)
+  :config (setq python-shell-interpreter "python3"))
+#+END_SRC
+**** Автодополнение
+#+BEGIN_SRC emacs-lisp
+(use-package company-anaconda
+  :after company
+  :config (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+#+END_SRC
+**** Документация
+#+BEGIN_SRC emacs-lisp
+;;; Access python documentation
+(use-package pydoc
+  :commands pydoc
+  :config (setq pydoc-command "python3 -m pydoc"))
+
+(use-package helm-pydoc)
+#+END_SRC
+**** Статический анализ
+#+BEGIN_SRC emacs-lisp
+(use-package company-jedi
+  :after company
+  :hook (python-mode . enable-jedi)
+  :config  (add-to-list 'company-backends 'company-jedi))
+#+END_SRC
+*** Javascript
+**** Основной мод
+#+BEGIN_SRC emacs-lisp
+;;; Javascript
+(use-package js2-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+  (setq-default js2-basic-offset 2)
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+              (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+              (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+              (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+              (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
+#+END_SRC
+**** Node.js REPL
+#+BEGIN_SRC emacs-lisp
+;;; Node.js Repl
+(use-package nodejs-repl)
+#+END_SRC
+**** Typescript
+#+BEGIN_SRC emacs-lisp
+;;; Typescript support
+(use-package typescript-mode)
+#+END_SRC
+**** Vue.js
+#+BEGIN_SRC emacs-lisp
+;;; Vue
+(use-package vue-mode
+  :config (setq mmm-submode-decoration-level 0))
+#+END_SRC
+*** Haskell
+**** Основной мод
+#+BEGIN_SRC emacs-lisp
+;;; Haskell
+(use-package haskell-mode)
+#+END_SRC
+**** Окружение разработки
+#+BEGIN_SRC emacs-lisp
+;;; Haskell support
+(use-package intero
+  :after haskell-mode
+  :config (add-hook 'haskell-mode-hook 'intero-mode))
+#+END_SRC
+*** Clojure
+**** REPL
+#+BEGIN_SRC emacs-lisp
+;;; Clojure REPL
+(use-package cider)
+#+END_SRC
+** Языки разметки
+*** Веб шаблоны
+**** Web-mode
+#+BEGIN_SRC emacs-lisp
+;;; Templates
+(use-package web-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-enable-auto-pairing t)
+  (setq web-mode-enable-current-element-highlight t)
+  (setq web-mode-enable-current-column-highlight t))
+#+END_SRC
+*** Org-mode
+#+BEGIN_SRC emacs-lisp
+;;; org
+(use-package org
+  :config
+  (setq org-todo-keywords
+        (quote ((sequence "TODO(t)" "MIGRATE(m)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+  (setq org-todo-keyword-faces
+        (quote (("TODO" :foreground "red" :weight bold)
+                ("NEXT" :foreground "blue" :weight bold)
+                ("DONE" :foreground "forest green" :weight bold)
+                ("WAITING" :foreground "orange" :weight bold)
+                ("HOLD" :foreground "magenta" :weight bold)
+                ("CANCELLED" :foreground "forest green" :weight bold)
+                ("MEETING" :foreground "forest cyan" :weight bold)
+                ("PHONE" :foreground "blue" :weight bold)))))
+#+END_SRC
+**** Пункты списка для org-mode
+#+BEGIN_SRC emacs-lisp
+;;; Bullets for org-mode
+(use-package org-bullets
+  :if window-system
+  :commands org-bullets-mode
+  :hook (org-mode . org-bullets-mode))
+#+END_SRC
+**** Агенда
+#+BEGIN_SRC emacs-lisp
+;;; Org-mode Setup
+(setq org-agenda-files (list
+                        "~/Documents/life.org"))
+#+END_SRC
+**** Техника pomodoro
+#+BEGIN_SRC emacs-lisp
+;;; Pomodoro technique tracking for org-mode
+(use-package org-pomodoro)
+#+END_SRC
+**** Ведение журнала
+#+BEGIN_SRC emacs-lisp
+;;; Journal
+(use-package org-journal)
+#+END_SRC
+**** Презентации
+#+BEGIN_SRC emacs-lisp
+;;; Presentation
+(use-package epresent)
+#+END_SRC
+*** Markdown
+**** Превью
+#+BEGIN_SRC emacs-lisp
+;;; Markdown preview
+(use-package flymd)
+#+END_SRC
+*** Lilypond
+#+BEGIN_SRC emacs-lisp
+;;; Lilypond
+(progn
+  (autoload 'lilypond "lilypond")
+  (autoload 'lilypond-mode "lilypond-mode")
+  (setq auto-mode-alist
+        (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+  (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
+
+;;; Flycheck lilypond
+(use-package flycheck-lilypond
+  :after flycheck)
+#+END_SRC
+** Коммуникации
+**** IRC
+#+BEGIN_SRC emacs-lisp
+;;; IRC
+(use-package erc)
+#+END_SRC
+**** Telegram
+#+BEGIN_SRC emacs-lisp
+;;; Telegram client
+(use-package telega
+  :config (telega-mode-line-mode 1))
+#+END_SRC
+**** Email
+***** Конвертирование org в html
+#+BEGIN_SRC emacs-lisp
+;;; convert org to html in gnus
+(use-package org-mime)
+#+END_SRC
+**** GNUPG
+***** Ввод ключей
+#+BEGIN_SRC emacs-lisp
+;;; Dialog program for entering password
+(use-package pinentry
+  :config
+  (setq epa-pinentry-mode 'loopback)
+  (pinentry-start))
+#+END_SRC
+** Разное
+*** Минорные твики дефолтного имакса
+**** Скрыть бары и скролл
+#+BEGIN_SRC emacs-lisp
+;;; Disable emacs gui
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+#+END_SRC
+**** Не спрашивать о несуществующих буферах
+#+BEGIN_SRC emacs-lisp
+(setq-default confirm-nonexistent-file-or-buffer t)
+#+END_SRC
+**** Спрашивать покороче
+    Не спрашивать yes/no, вместо этого спрашивать y/n
+#+BEGIN_SRC emacs-lisp
+;;; Short messages
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+**** Сохранение позиции курсора
+#+BEGIN_SRC emacs-lisp
+(setq
+ save-place-forget-unreadable-files t
+ save-place-limit 200)
+
+(save-place-mode 1)
+#+END_SRC
+**** Убивать целую линию
+#+BEGIN_SRC emacs-lisp
+;; Kill whole line
+(global-set-key (kbd "C-k") 'kill-whole-line)
+#+END_SRC
+**** Добавление пакетов guix в load-path
+#+BEGIN_SRC emacs-lisp
+(add-to-list 'load-path "~/.guix-profile/share/emacs/site-lisp/")
+#+END_SRC
+
+**** Переменная PATH в eshell
+#+BEGIN_SRC emacs-lisp
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-env "PATH")))
+#+END_SRC
+**** Не создавать лишних файлов
+#+BEGIN_SRC emacs-lisp
+  (setq create-lockfiles nil
+   make-backup-files nil        ; disable backup files
+   auto-save-list-file-name nil ; disable .saves files
+   auto-save-default nil        ; disable auto saving
+   ring-bell-function 'ignore  ; turn off alarms completely
+   make-backup-files nil
+   auto-save-default nil
+   create-lockfiles nil)
+#+END_SRC
+**** Отображение номера колонки
+#+BEGIN_SRC emacs-lisp
+(column-number-mode)
+#+END_SRC
+*** Системные пакеты
+**** Docker
+#+BEGIN_SRC emacs-lisp
+;;; Manage docker in emacs
+(use-package docker
+  :ensure-system-package docker
+  :bind ("C-c d" . docker))
+#+END_SRC
+*** Баг-трекеры
+**** Debbugs
+#+BEGIN_SRC emacs-lisp
+;;; Bug-Tracker DebBugs
+(use-package debbugs)
+#+END_SRC
+*** Демонстрация нажатий и команд
+#+BEGIN_SRC emacs-lisp
+(use-package keycast)
+#+END_SRC
+*** HTTP сервер
+#+BEGIN_SRC emacs-lisp
+;;; HTTP server
+(use-package simple-httpd)
+#+END_SRC
+
+*** REST клиент
+#+BEGIN_SRC emacs-lisp
+;;; Rest client
+(use-package restclient)
+#+END_SRC
+*** DJVU 
+#+BEGIN_SRC emacs-lisp
+;;; Djvu
+(use-package djvu)
+#+END_SRC
+*** PDF
+#+BEGIN_SRC emacs-lisp
+;;; PDF Tools
+(use-package pdf-tools
+  :if window-system
+  :demand
+  :config (pdf-loader-install))
+#+END_SRC
+*** Экспорт в HTML
+#+BEGIN_SRC emacs-lisp
+;;; Export to html
+(use-package htmlize)
+#+END_SRC
+*** Управление финансами
+#+BEGIN_SRC emacs-lisp
+;;; Accounting
+(use-package ledger-mode)
+#+END_SRC
+*** Скрытие минорных модов
+#+BEGIN_SRC emacs-lisp
+;;; hide some minor modes
+(use-package diminish
+  :demand)
+#+END_SRC
