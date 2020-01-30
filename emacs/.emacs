@@ -31,11 +31,14 @@
 (require 'diminish)
 (require 'bind-key)
 
- (use-package exec-path-from-shell
-   :config
-   (when (memq window-system '(mac ns x))
-     (exec-path-from-shell-initialize)
-     (exec-path-from-shell-copy-env "PATH")))
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-copy-env "PATH")
+    (exec-path-from-shell-copy-env "PYTHONPATH")
+    (exec-path-from-shell-initialize)))
+
+(setq python-shell-interpreter "/home/w96k/.guix-profile/bin/python3")
 
 (org-babel-load-file "~/.emacs-config.org")
 (delete-file "~/.emacs-config.el")
@@ -46,7 +49,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (pos-tip keycast org-mime flycheck-lilypond flymd epresent org-journal intero vue-mode js2-mode company-anaconda anaconda-mode mwim yasnippet-snippets column-enforce-mode swiper ivy browse-kill-ring git-gutter+ magit-gitflow magit aggressive-indent mood-line color-theme-sanityinc-tomorrow auto-package-update use-package))))
+    (pos-tip yasnippet-snippets vue-mode use-package swiper org-mime org-journal mwim mood-line magit-gitflow keycast js2-mode intero git-gutter+ flymd flycheck-lilypond epresent company-anaconda column-enforce-mode color-theme-sanityinc-tomorrow browse-kill-ring auto-package-update aggressive-indent))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

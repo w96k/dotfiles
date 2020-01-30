@@ -147,38 +147,6 @@
 #+END_SRC
 ** Поиск (ivy + swiper + councel)
 
-# #+BEGIN_SRC emacs-lisp
-# (use-package ido
-#     :config
-#     (setq ido-enable-flex-matching t)
-#     (setq ido-everywhere t)
-#     (setq ido-use-ilename-at-point 'guess)
-#     (ido-mode))
-# #+END_SRC
-
-# #+BEGIN_SRC emacs-lisp
-# (use-package ido-vertical-mode
-#   :config
-#   (ido-vertical-mode)
-#   (setq ido-vertical-define-keys 'C-n-and-C-p-only))
-# #+END_SRC
-
-# #+BEGIN_SRC emacs-lisp
-#   (use-package ido-completing-read+
-#     :after ido
-#     :config
-#     (ido-ubiquitous-mode))
-# #+END_SRC
-
-# #+BEGIN_SRC emacs-lisp
-# (use-package smex
-#   :init (smex-initialize)
-#   :bind 
-#   ("M-x" . smex)
-#   ("M-X" . smex-major-mode-commands)
-#   :ensure t)
-# #+END_SRC
-
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
       :ensure t
@@ -215,7 +183,8 @@
 
 ** Автодополнение
 #+BEGIN_SRC emacs-lisp
-;;(use-package pos-tip)
+(use-package pos-tip
+  :ensure t)
 
 (use-package company
   :diminish
@@ -232,7 +201,7 @@
               ("C-p" . company-select-previous)))
 
 (use-package company-quickhelp
-  :after company 
+  :after company pos-tip
   :config (company-quickhelp-mode))
 #+END_SRC
 ** Проекты
@@ -344,14 +313,15 @@
 (use-package anaconda-mode
   :ensure
   :hook (python-mode . anaconda-mode)
-  :config (setq python-shell-interpreter "python3"))
+  (python-mode . anaconda-eldoc-mode))
 #+END_SRC
 *** Автодополнение
 #+BEGIN_SRC emacs-lisp
 (use-package company-anaconda
   :ensure
   :after company
-  :config (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+  :config
+  (add-to-list 'company-backends '(company-anaconda :with company-capf)))
 #+END_SRC
 *** Документация
 #+BEGIN_SRC emacs-lisp
@@ -360,13 +330,18 @@
   :commands pydoc
   :config (setq pydoc-command "python3 -m pydoc"))
 #+END_SRC
-*** Статический анализ
-#+BEGIN_SRC emacs-lisp
-(use-package company-jedi
-  :after company
-  :hook (python-mode . enable-jedi)
-  :config  (add-to-list 'company-backends 'company-jedi))
-#+END_SRC
+
+# *** Статический анализ
+# #+BEGIN_SRC emacs-lisp
+#   (use-package company-jedi
+#     :after company epc
+#     :hook (python-mode . enable-jedi)
+#     :config 
+#   (add-to-list 'company-backends 'company-jedi)
+#   (defvar jedi-config:with-virtualenv nil)
+#   (defvar jedi-config:use-system-python t)
+#   (jedi:install-server))
+# #+END_SRC
 ** Javascript
 *** Основной мод
 #+BEGIN_SRC emacs-lisp
@@ -548,6 +523,10 @@
 #+BEGIN_SRC emacs-lisp
 (setq-default confirm-nonexistent-file-or-buffer t)
 #+END_SRC
+*** Уничтожать текущий буфер
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+#+END_SRC
 *** Спрашивать покороче
     Не спрашивать yes/no, вместо этого спрашивать y/n
 #+BEGIN_SRC emacs-lisp
@@ -598,7 +577,7 @@
   scroll-margin 10
   scroll-step 1
   scroll-conservatively 10000
-  scroll-preserve-screen-position 10)
+  scroll-preserve-screen-position 100)
 #+END_SRC
 ** Системные пакеты
 *** Docker
