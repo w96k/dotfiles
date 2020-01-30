@@ -313,6 +313,11 @@
 ;;; Emacs Lisp string manipulation
 (use-package s)
 #+END_SRC
+*** Автокомлпит Scheme
+#+BEGIN_SRC emacs-lisp
+(use-package scheme-complete
+  :after company)
+#+END_SRC
 *** REPL Scheme
 #+BEGIN_SRC emacs-lisp
 (use-package emacs-geiser

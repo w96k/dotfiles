@@ -126,7 +126,8 @@
 	 ;;"emacs-smooth-scrolling"
 	 "emacs-so-long"
 	 "emacs-hydra"
-	 "emacs-geiser")))
+	 "emacs-geiser"
+	 "emacs-scheme-complete")))
 
 (operating-system
  (host-name "Libreboot")
