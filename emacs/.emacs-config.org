@@ -15,7 +15,6 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 #+END_SRC
-
 * Внешний вид
 ** Назначение шрифта
 А также отступа между строк
@@ -47,13 +46,16 @@
 ** Мод-лайн
 #+BEGIN_SRC emacs-lisp
   (use-package mood-line
-    :ensure
-    :config (mood-line-mode))
+    :ensure t
+    :config
+    (setq mood-line-show-encoding-information t)
+    (mood-line-mode))
 #+END_SRC
 ** Подсвечивать текущую строку
 #+BEGIN_SRC emacs-lisp
-;;; Display current line
-(global-hl-line-mode)
+  ;;; Display current line
+  (when (display-graphic-p)
+  (global-hl-line-mode))
 #+END_SRC
 * Редактирование кода в общем
 ** Линтер Flymake [built-in]
@@ -511,6 +513,11 @@
 #+END_SRC
 * Разное
 ** Минорные твики дефолтного имакса
+*** Улучшение производительности в больших файлах
+#+BEGIN_SRC emacs-lisp
+  (use-package so-long
+    :config (global-so-long-mode 1))
+#+END_SRC
 *** Скрыть бары и скролл
 #+BEGIN_SRC emacs-lisp
 ;;; Disable emacs gui
