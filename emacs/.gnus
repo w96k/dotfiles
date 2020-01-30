@@ -5,12 +5,9 @@
 
 (setq gnus-select-method
       '(nnimap "posteo"
-               (nnimap-address "posteo.de")  ; it could also be imap.googlemail.com if that's your server.
+               (nnimap-address "posteo.de")
                (nnimap-server-port "imaps")
                (nnimap-stream ssl)))
-
-(add-to-list 'gnus-secondary-select-methods '(nntp "news.gnus.org"))
-
 
 (setq smtpmail-smtp-server "posteo.de"
       smtpmail-smtp-service 587
