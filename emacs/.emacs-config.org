@@ -227,6 +227,10 @@
          ("M-g z" . dumb-jump-go-prefer-external-other-window)))
 #+END_SRC
 
+** Hydra
+#+BEGIN_SRC emacs-lisp
+(use-package hydra)
+#+END_SRC
 ** Ширина строки -- 80 символов
 #+BEGIN_SRC emacs-lisp
   ;;; 80 column width limit highlighter
@@ -308,6 +312,14 @@
 #+BEGIN_SRC emacs-lisp
 ;;; Emacs Lisp string manipulation
 (use-package s)
+#+END_SRC
+*** REPL Scheme
+#+BEGIN_SRC emacs-lisp
+(use-package emacs-geiser
+  :after yasnippet
+  :config
+  (add-to-list 'geiser-guile-load-path "~/github/guix")
+  (add-to-list 'yas-snippet-dirs "~/github/guix/etc/snippets"))
 #+END_SRC
 ** Python
 *** Anaconda

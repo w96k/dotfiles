@@ -123,7 +123,10 @@
 	 "emacs-htmlize"
 	 "emacs-ledger-mode"
 	 "emacs-diminish"
-	 ;;"emacs-smooth-scrolling")))
+	 ;;"emacs-smooth-scrolling"
+	 "emacs-so-long"
+	 "emacs-hydra"
+	 "emacs-geiser")))
 
 (operating-system
  (host-name "Libreboot")
