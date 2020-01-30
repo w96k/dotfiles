@@ -29,7 +29,7 @@
       *mode-line-pad-y* 8
       *mode-line-timeout* 1
       *mouse-focus-policy* :click
-      *window-border-style* :tight
+      *window-border-style* :thin
       *message-window-gravity* :center
       *normal-border-width* 0
       *mode-line-border-width* 0
