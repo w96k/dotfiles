@@ -32,6 +32,8 @@ export LS_OPTIONS='--color=auto'
 eval "`dircolors`"
 alias ls='ls $LS_OPTIONS'
 
+alias python='python3'
+
 # Autocomplete bash
 complete -cf sudo
 set -o history

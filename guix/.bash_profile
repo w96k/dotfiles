@@ -9,14 +9,8 @@ export PATH=$PATH:/home/w96k/.gem/
 export PATH=$PATH:/home/w96k/.gem/ruby/2.5.0/bin/
 
 # Add nix to PATH
-export PATH=$PATH:/nix/var/nix/profiles/default/bin/
 
-# Add custom packages to guix PATH
-export GUIX_PACKAGE_PATH=~/.guix-packages
-
-export TERM=rxvt
-
-setxkbmap -layout us,ru -option grp:win_space_toggle -option 'ctrl:nocaps'
+setxkbmap -layout us,ru -option grp:win_space_toggle -option 'ctrl:swapcaps'
 
 sh export GDK_CORE_DEVICE_EVENTS=1
 
