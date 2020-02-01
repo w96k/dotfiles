@@ -26,13 +26,13 @@
 (print *time-modeline-string*)
 
 (setf *mode-line-pad-x* 8
-      *mode-line-pad-y* 8
+      *mode-line-pad-y* 2
       *mode-line-timeout* 1
       *mouse-focus-policy* :click
       *window-border-style* :thin
       *message-window-gravity* :center
       *normal-border-width* 0
-      *mode-line-border-width* 0
+      *mode-line-border-width* 1
       *transient-border-width* 0
       *mode-line-position* :top
       *time-modeline-string* "%d.%m.%y %k:%M"
