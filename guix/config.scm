@@ -127,14 +127,17 @@
 	 "emacs-so-long"
 	 "emacs-hydra"
 	 "emacs-geiser"
-	 "emacs-scheme-complete")))
+	 "emacs-scheme-complete"
+	 "emacs-build-farm"
+	 "emacs-clojure-mode"
+	 "emacs-cider")))
 
 (operating-system
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
- (kernel-arguments '("processor.max_cstate=1"  ;Disable power savings
-		     "intel_idle.max_cstate=0" ;(cstate 3-4 provides
+ (kernel-arguments '("processor.max_cstate=3"  ;Disable power savings
+		     "intel_idle.max_cstate=2" ;(cstate 3-4 provides
                                         ;high freq cpu noice)
 		     "intremap=off" ;Fix for failed to map dmar2
 		     "acpi=strict"
@@ -218,6 +221,9 @@
 	  "python-virtualenv"
 	  "python-jedi"
 	  "python-ipython"
+	  "icedtea@3.7.0" ;; java
+	  "clojure"
+	  "clojure-tools-cli"
 	  "bundler"
 	  "sbcl"
 	  "docker"
