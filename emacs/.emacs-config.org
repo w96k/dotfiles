@@ -428,6 +428,31 @@
   :after haskell-mode
   :config (add-hook 'haskell-mode-hook 'intero-mode))
 #+END_SRC
+** Лиспы в целом
+*** Lispy
+#+BEGIN_SRC elisp
+(use-package lispy)
+#+END_SRC
+*** Parinfer
+#+BEGIN_SRC elisp
+(use-package parinfer
+  :bind
+  (("C-," . parinfer-toggle-mode))
+  :init
+  (progn
+    (setq parinfer-extensions
+          '(defaults       ; should be included.
+            pretty-parens  ; different paren styles for different modes.
+            lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
+            paredit        ; Introduce some paredit commands.
+            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
+            smart-yank))   ; Yank behavior depend on mode.
+    (add-hook 'clojure-mode-hook #'parinfer-mode)
+    (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
+    (add-hook 'common-lisp-mode-hook #'parinfer-mode)
+    (add-hook 'scheme-mode-hook #'parinfer-mode)
+    (add-hook 'lisp-mode-hook #'parinfer-mode)))
+#+END_SRC
 ** Clojure
 *** Mode
 #+BEGIN_SRC elisp
