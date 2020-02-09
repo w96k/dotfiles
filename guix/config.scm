@@ -144,29 +144,17 @@
 		     "intel_idle.max_cstate=2" ;(cstate 3-4 provides
                                         ;high freq cpu noice)
 		     "intremap=off" ;Fix for failed to map dmar2
-		     "acpi=strict"
-		     "splash"
-		     "intel_iommu=on"
-		     "i915.enable_dc=0"
-		     "i915.modeset=1"
-		     "i915.enable_psr=0"
-		     "i915.enable_fbc=0"
-		     "i915.fastboot=1"
-		     "intel_agp"))
- (initrd-modules (append '("i915")
-			 %base-initrd-modules))
+		     ))
+ (initrd-modules (append '("i915") %base-initrd-modules))
  (bootloader (bootloader-configuration
 	      (bootloader grub-bootloader)
 	      (target "/dev/sda")))
-
  (file-systems (cons* (file-system
 		       (device (file-system-label "root"))
 		       (mount-point "/")
 		       (type "ext4"))
 		      %base-file-systems))
-
  (swap-devices `("/dev/sda5"))
-
  (users (cons (user-account
 	       (name "w96k")
 	       (group "users")
@@ -175,7 +163,6 @@
 				       "docker"))
 	       (home-directory "/home/w96k"))
 	      %base-user-accounts))
-
  (packages
   (append
    %emacs
@@ -247,10 +234,7 @@
 	  "glibc-utf8-locales"))
    %base-packages))
 
- ;; Use the "desktop" services, which include the X11
- ;; log-in service, networking with NetworkManager, and more.
-
  (services  %my-services)
-
+ 
  ;; Allow resolution of '.local' host names with mDNS.
  (name-service-switch %mdns-host-lookup-nss))
