@@ -436,6 +436,7 @@
 *** Parinfer
 #+BEGIN_SRC elisp
 (use-package parinfer
+  :after lispy
   :bind
   (("C-," . parinfer-toggle-mode))
   :init
@@ -659,6 +660,16 @@
   scroll-conservatively 10000
   scroll-preserve-screen-position 100)
 #+END_SRC
+** Which-key
+#+BEGIN_SRC elisp
+  (use-package which-key
+    :config
+    (setq which-key-show-early-on-C-h t)
+    (setq which-key-side-window-location 'bottom)
+    (setq which-key-idle-delay 0.5)
+    (global-set-key (kbd "C-h C-k") 'which-key-show-major-mode)
+    (which-key-mode))
+#+END_SRC
 ** Системные пакеты
 *** Docker
 #+BEGIN_SRC emacs-lisp
@@ -666,6 +677,17 @@
 (use-package docker
   :ensure-system-package docker
   :bind ("C-c d" . docker))
+#+END_SRC
+** Мультимедиа
+*** EMMS
+#+BEGIN_SRC elisp
+  (use-package emms
+    :config
+   (emms-all)
+   (emms-default-players)
+   (setq emms-source-file-default-directory (expand-file-name "~/Music"))
+   (setq emms-player-list '(emms-player-mpg321 emms-player-ogg123
+			 emms-player-mplayer)))
 #+END_SRC
 ** Баг-трекеры
 *** Debbugs

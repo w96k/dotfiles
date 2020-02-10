@@ -134,7 +134,9 @@
 	 "emacs-slime"
 	 "emacs-slime-company"
 	 "emacs-parinfer-mode"
-	 "emacs-lispy")))
+	 "emacs-lispy"
+	 "emacs-emms"
+	 "emacs-which-key")))
 
 (operating-system
  (host-name "Libreboot")
