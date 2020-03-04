@@ -38,7 +38,16 @@
     (exec-path-from-shell-copy-env "PYTHONPATH")
     (exec-path-from-shell-initialize)))
 
-(setq python-shell-interpreter "/home/w96k/.guix-profile/bin/python3")
-
 (org-babel-load-file "~/.emacs-config.org")
-(delete-file "~/.emacs-config.el")
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight-indentation-face ((t (:inherit transient-active-infix)))))

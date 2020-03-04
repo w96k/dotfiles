@@ -193,7 +193,7 @@
   :custom
   (company-require-match nil)
   (company-minimum-prefix-length 1)
-  (company-idle-delay 0.1)
+  (company-idle-delay 0)
   (company-tooltip-align-annotation t)
   :hook ((prog-mode . company-mode))
   :config
@@ -346,12 +346,28 @@
   (add-to-list 'yas-snippet-dirs "~/github/guix/etc/snippets"))
 #+END_SRC
 ** Python
+*** Elpy
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :ensure t
+    :init
+    (elpy-enable)
+    :config
+    (setq elpy-rpc-python-command "python3"
+	  python-shell-interpreter "python3"
+	  ;;python-shell-interpreter "ipython" elpy-modules
+	  elpy-rpc-virtualenv-path 'current
+	  pyvenv-mode-line-indicator t )
+    :bind
+    ("C-c p" . elpy-autopep8-fix-code)
+    ("C-c b" . elpy-black-fix-code))
+#+END_SRC
 *** Anaconda
 #+BEGIN_SRC emacs-lisp
-(use-package anaconda-mode
-  :ensure
-  :hook (python-mode . anaconda-mode)
-  (python-mode . anaconda-eldoc-mode))
+  ;; (use-package anaconda-mode
+  ;;   :ensure
+  ;;   :hook (python-mode . anaconda-mode)
+  ;;   (python-mode . anaconda-eldoc-mode))
 #+END_SRC
 *** Jinja2
 #+BEGIN_SRC emacs-lisp
@@ -360,11 +376,11 @@
 #+END_SRC
 *** Автодополнение
 #+BEGIN_SRC emacs-lisp
-(use-package company-anaconda
-  :ensure
-  :after company
-  :config
-  (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+  ;; (use-package company-anaconda
+  ;;   :ensure
+  ;;   :after company
+  ;;   :config
+  ;;   (add-to-list 'company-backends '(company-anaconda :with company-capf)))
 #+END_SRC
 *** Документация
 #+BEGIN_SRC emacs-lisp
@@ -477,7 +493,12 @@
   :config 
   ((cljr-add-keybindings-with-prefix "C-c C-m")))
 #+END_SRC
-* Языки разметки
+* Языки декларирования
+** SQL
+#+BEGIN_SRC emacs-lisp
+
+(use-package emacsql)
+#+END_SRC
 ** Веб шаблоны
 *** Web-mode
 #+BEGIN_SRC emacs-lisp
@@ -512,7 +533,6 @@
 #+BEGIN_SRC emacs-lisp
 ;;; Bullets for org-mode
 (use-package org-bullets
-  :if window-system
   :commands org-bullets-mode
   :hook (org-mode . org-bullets-mode))
 #+END_SRC
@@ -626,6 +646,10 @@
  save-place-limit 200)
 
 (save-place-mode 1)
+#+END_SRC
+*** Мигающий курсор
+#+BEGIN_SRC emacs-lisp
+  (blink-cursor-mode 1)
 #+END_SRC
 *** Убивать целую линию
 #+BEGIN_SRC emacs-lisp
