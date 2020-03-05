@@ -8,6 +8,7 @@
              (srfi srfi-1))
 
 (use-service-modules xorg
+		     admin
                      networking
                      desktop
                      databases
@@ -26,23 +27,23 @@
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
-   ;;(service slim-service-type)
-
-   (service elogind-service-type)
+   ;; (service slim-service-type)
    (service dhcp-client-service-type)
 
    (service libvirt-service-type
-	    (libvirt-configuration
-	     (unix-sock-group "libvirt")))
+    	    (libvirt-configuration
+   	     (unix-sock-group "libvirt")))
+   x11-socket-directory-service
 
    ;; Wacom tablet support
    (service inputattach-service-type
             (inputattach-configuration
-             (device "/dev/ttyS4")
-             (device-type "wacom")))
+	     (device "/dev/ttyS4")
+	     (device-type "wacom")))
    
    ;; (postgresql-service #:extension-packages (list postgis))
    (service docker-service-type)
+   
    (service tor-service-type)
    ;; Fix unavailable /usr/bin/env
    ;; It's needed by many bash scripts
@@ -52,14 +53,19 @@
                        (file-append bash "/bin/bash"))
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
+
+   (service elogind-service-type)
+   (service rottlog-service-type)
+   %base-services
+   
    ;;%powertop-service
-   %base-services))
+   ))
 
 ;; Remove gdm (gdm is default in guix)
-(set! %my-services
-  (remove (lambda (service)
-	    (eq? (service-kind service) gdm-service-type))
-	  %my-services))
+;; (set! %my-services
+;;   (remove (lambda (service)
+;; 	    (eq? (service-kind service) gdm-service-type))
+;; 	  %my-services))
 
 ;; Emacs + emacs packages
 ;; Commented packages are missed in guix
@@ -151,10 +157,13 @@
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
- (kernel-arguments '("processor.max_cstate=2"  ;Disable power savings
-		     "intel_idle.max_cstate=2" ;(cstate 3-4 provides
-                                        ;high freq cpu noice)
-		     "intremap=off" ;Fix for failed to map dmar2
+ (kernel-arguments '("processor.max_cstate=2"  ; Disable power savings
+		     "intel_idle.max_cstate=2" ; (cstate 3-4 provides
+					; high freq cpu noice)
+		     "intremap=off"     ; Fix for failed to map dmar2
+		     "console=ttyS0"    ; Redirect logs to different
+					; tty, so system doesn't show
+					; any logs while booting
 		     ))
  (initrd-modules (append '("i915") %base-initrd-modules))
  (bootloader (bootloader-configuration
@@ -171,7 +180,8 @@
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
 				       "audio" "video"
-				       "docker"))
+				       "docker"
+				       ))
 	       (home-directory "/home/w96k"))
 	      %base-user-accounts))
  (packages
@@ -181,6 +191,8 @@
 	'(
 	  "bash"
 	  "bash-completion"
+	  ;;"xorg-server"
+	  ;;"xorg-server-xwayland"
 	  "libva"
 	  "libva-utils"
 	  "intel-vaapi-driver"
@@ -214,6 +226,7 @@
 	  "vim"
 	  "xinit"
 	  "xterm"
+	  "setxkbmap"
 	  "xinit"
 	  "rxvt-unicode"
 	  "st"
@@ -238,11 +251,11 @@
 	  "php"
 	  "alsa-utils"
 	  "mc"
+	  "qemu"
 	  "aspell"
 	  "aspell-dict-en"
 	  "dmidecode"
 	  "wayland"
-	  ;;"weston"
 	  "sway"
 	  "dmenu"
 	  "waybar"
