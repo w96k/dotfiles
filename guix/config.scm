@@ -2,7 +2,7 @@
 ;; I use it on my libreboot'ed thinkpad X200T
 ;;
 ;; Feel free to use it
-;; https://w96k.com
+;; https://w96k.ru
 
 (use-modules (gnu) (gnu system nss)             
              (srfi srfi-1))
@@ -12,6 +12,7 @@
                      desktop
                      databases
                      web
+		     virtualization
                      docker)
 
 (use-package-modules geo linux bash python)
@@ -25,7 +26,14 @@
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
-   (service slim-service-type)
+   ;;(service slim-service-type)
+
+   (service elogind-service-type)
+   (service dhcp-client-service-type)
+
+   (service libvirt-service-type
+	    (libvirt-configuration
+	     (unix-sock-group "libvirt")))
 
    ;; Wacom tablet support
    (service inputattach-service-type
@@ -33,7 +41,7 @@
              (device "/dev/ttyS4")
              (device-type "wacom")))
    
-   (postgresql-service #:extension-packages (list postgis))
+   ;; (postgresql-service #:extension-packages (list postgis))
    (service docker-service-type)
    (service tor-service-type)
    ;; Fix unavailable /usr/bin/env
@@ -45,13 +53,13 @@
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
    ;;%powertop-service
-   %desktop-services))
+   %base-services))
 
 ;; Remove gdm (gdm is default in guix)
 (set! %my-services
   (remove (lambda (service)
-            (eq? (service-kind service) gdm-service-type))
-          %my-services))
+	    (eq? (service-kind service) gdm-service-type))
+	  %my-services))
 
 ;; Emacs + emacs packages
 ;; Commented packages are missed in guix
@@ -136,7 +144,8 @@
 	 "emacs-parinfer-mode"
 	 "emacs-lispy"
 	 "emacs-emms"
-	 "emacs-which-key")))
+	 "emacs-which-key"
+	 "emacs-emacsql")))
 
 (operating-system
  (host-name "Libreboot")
@@ -157,7 +166,7 @@
 		       (type "ext4"))
 		      %base-file-systems))
  (swap-devices `("/dev/sda5"))
- (users (cons (user-account
+ (users (cons (user-account		
 	       (name "w96k")
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
@@ -176,18 +185,17 @@
 	  "libva-utils"
 	  "intel-vaapi-driver"
 	  "curl"
-	  "mesa"
-	  "mesa-headers"
-	  "xorg-server"
+	  "glu"
+	  "libxi"
+	  "freeglut"
 	  "xf86-video-intel"
-	  "libdrm"
 	  "patchelf"
 	  "binutils"
 	  "gcc-toolchain"
 	  "glibc"
 	  "stow"
 	  "icecat"
-	  "next"
+	  ;;"next"
 	  "ratpoison"
 	  "stumpwm"
 	  "i3-wm"
@@ -208,6 +216,7 @@
 	  "xterm"
 	  "xinit"
 	  "rxvt-unicode"
+	  "st"
 	  "node"
 	  "ruby"
 	  "python"
@@ -229,8 +238,14 @@
 	  "php"
 	  "alsa-utils"
 	  "mc"
+	  "aspell"
+	  "aspell-dict-en"
 	  "dmidecode"
 	  "wayland"
+	  ;;"weston"
+	  "sway"
+	  "dmenu"
+	  "waybar"
 	  "gnunet"
 	  "adwaita-icon-theme"
 	  "glibc-utf8-locales"))
