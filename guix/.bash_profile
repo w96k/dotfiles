@@ -54,6 +54,12 @@ set -o notify
 shopt -q -s cdspell
 shopt -s autocd
 
+# Wayland vars
+export XDG_SESSION_TYPE=wayland
+export SDL_VIDEODRIVER=wayland
+export _JAVA_AWT_WM_NONREPARENTING=1
+export MOZ_ENABLE_WAYLAND=1
+
 if test -z "${XDG_RUNTIME_DIR}";
 then
     export XDG_RUNTIME_DIR=/tmp/${UID}-runtime-dir
