@@ -3,7 +3,7 @@ URxvt.termName: rxvt
 !TomorrowNightEighties
 *.foreground:   #cccccc
 *.background:   #2d2d2d
-*.cursorColor:  #aeafad
+*.cursorColor:  #f2777a
 
 ! Black / Grey
 *.color0:       #999999
@@ -40,8 +40,6 @@ URxvt.termName: rxvt
 ! URxvt
 URxvt.font: xft:terminus:pixelsize=14
 URxvt.scrollBar: false
-URxvt.perl-ext-common: default,selection-to-clipboard,pasta,matcher,keyboard-select
-URxvt.keysym.M-u:     perl:url-select:select_next
 URxvt.underlineURLs:  True
 URxvt.cursorBlink: True
 Urxvt.cursorUnderline: True
@@ -55,3 +53,6 @@ Xft.hintstyle: hintslight
 Xft.hinting: 0
 Xft.antialias: 1
 Xft.rgba: rgb
+
+! Change cursor
+Xcursor.theme: Adwaita

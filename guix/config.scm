@@ -1,6 +1,8 @@
 ;; This is GUIX system that I use on day-to-day basis.
 ;; I use it on my libreboot'ed thinkpad X200T
 ;;
+;; Wayland + Sway setup for development (Python, Haskell, Lisp, C)
+;;
 ;; Feel free to use it
 ;; https://w96k.ru
 
@@ -8,6 +10,7 @@
              (srfi srfi-1))
 
 (use-service-modules xorg
+		     dbus
 		     admin
                      networking
                      desktop
@@ -27,13 +30,14 @@
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
-   ;; (service slim-service-type)
+   (service slim-service-type)
    (service dhcp-client-service-type)
 
    (service libvirt-service-type
     	    (libvirt-configuration
    	     (unix-sock-group "libvirt")))
-   x11-socket-directory-service
+   ;;x11-socket-directory-service
+   ;;(service dbus-root-service-type)
 
    ;; Wacom tablet support
    (service inputattach-service-type
@@ -72,7 +76,7 @@
 (define %emacs
   (map specification->package
        '(;;"emacs-next"
-	 "emacs"
+	 "emacs-no-x-toolkit"
 	 "emacs-with-editor"
 	 "emacs-use-package"
 	 ;;"emacs-auto-package-update"
@@ -258,7 +262,7 @@
 	  "wayland"
 	  "sway"
 	  "dmenu"
-	  "waybar"
+	  ;;"waybar"
 	  "gnunet"
 	  "adwaita-icon-theme"
 	  "glibc-utf8-locales"))

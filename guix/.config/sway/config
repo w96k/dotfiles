@@ -163,18 +163,15 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
 bar {
     position top
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
     status_command while date +'%Y-%m-%d %H:%M:%S %p'; do sleep 1; done
+    #swaybar_command waybar
     #status_command while echo 'hello'; do sleep1; done
-    
+    strip_workspace_name yes
 
     colors {
         statusline #cccccc
@@ -183,6 +180,7 @@ bar {
         inactive_workspace #333333 #333333 #cccccc
     }
 }
+
 
 input type:keyboard {
     xkb_layout us,ru
@@ -193,5 +191,7 @@ input type:keyboard {
 default_border none
 default_floating_border normal
 hide_edge_borders vertical
+
+gaps inner 1
 
 #include /gnu/store/08mg9iahnyh4fyrafla3zyb5an2jscb0-sway-1.2/etc/sway/config.d/*

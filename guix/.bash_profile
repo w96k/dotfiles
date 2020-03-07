@@ -70,6 +70,7 @@ then
 fi
 
 if [ "$(tty)" = "/dev/tty1" ]; then
+    herd start &&
 	exec sway
 fi
     
