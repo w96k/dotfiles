@@ -9,17 +9,24 @@
 (use-modules (gnu) (gnu system nss)             
              (srfi srfi-1))
 
-(use-service-modules xorg
-		     dbus
-		     admin
-                     networking
-                     desktop
-                     databases
-                     web
-		     virtualization
-                     docker)
+(use-service-modules
+ xorg
+ shepherd
+ dbus
+ admin
+ networking
+ desktop
+ databases
+ web
+ virtualization
+ docker)
 
-(use-package-modules geo linux bash python)
+(use-package-modules
+ geo
+ linux
+ bash
+ python
+ shells)
 
 ;; Run powertop --autotune on boot
 (define %powertop-service
@@ -30,8 +37,12 @@
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
-   (service slim-service-type)
+   ;;(service shepherd-root-service-type)
+   ;;(service slim-service-type)
    (service dhcp-client-service-type)
+
+   ;;(service wpa-supplicant-service-type)
+   ;;(service network-manager-service-type)
 
    (service libvirt-service-type
     	    (libvirt-configuration
@@ -46,7 +57,7 @@
 	     (device-type "wacom")))
    
    ;; (postgresql-service #:extension-packages (list postgis))
-   (service docker-service-type)
+   ;;(service docker-service-type)
    
    (service tor-service-type)
    ;; Fix unavailable /usr/bin/env
@@ -55,6 +66,8 @@
                        (file-append coreutils "/bin/env"))
    (extra-special-file "/bin/bash"
                        (file-append bash "/bin/bash"))
+   (extra-special-file "/bin/zsh"
+                       (file-append bash "/bin/zsh"))
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
 
@@ -137,7 +150,7 @@
 	 "emacs-js2-mode"
 	 "emacs-web-mode"
 	 "emacs-restclient"
-	 "emacs-djvu"
+	 ;;"emacs-djvu"
 	 "emacs-htmlize"
 	 "emacs-ledger-mode"
 	 "emacs-diminish"
@@ -184,8 +197,9 @@
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
 				       "audio" "video"
-				       "docker"
+				       ;;"docker"
 				       ))
+	       (shell (file-append zsh "/bin/zsh"))
 	       (home-directory "/home/w96k"))
 	      %base-user-accounts))
  (packages
@@ -195,6 +209,8 @@
 	'(
 	  "bash"
 	  "bash-completion"
+	  "zsh"
+	  "zsh-autosuggestions"
 	  ;;"xorg-server"
 	  ;;"xorg-server-xwayland"
 	  "libva"
@@ -216,6 +232,7 @@
 	  "stumpwm"
 	  "i3-wm"
 	  "inputattach"
+	  "imagemagick"
 	  "font-dejavu"
 	  "mailutils"
 	  "font-terminus"
@@ -235,6 +252,7 @@
 	  "rxvt-unicode"
 	  "st"
 	  "node"
+	  "perl"
 	  "ruby"
 	  "python"
 	  "python-virtualenv"
@@ -255,16 +273,22 @@
 	  "php"
 	  "alsa-utils"
 	  "mc"
-	  "qemu"
+	  ;;"qemu-minimal"
 	  "aspell"
 	  "aspell-dict-en"
 	  "dmidecode"
 	  "wayland"
 	  "sway"
 	  "dmenu"
+	  "mako"
+	  "tor"
+	  "i3status"
+	  "i3blocks"
 	  ;;"waybar"
 	  "gnunet"
 	  "adwaita-icon-theme"
+	  "font-awesome"
+	  "dbus"
 	  "glibc-utf8-locales"))
    %base-packages))
 

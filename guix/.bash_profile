@@ -4,6 +4,9 @@ export PATH="~/.nodejs/bin/:$PATH"
 # Add .bin to PATH
 export PATH="~/.bin/:$PATH"
 
+export PATH="~/.local/bin/:$PATH"
+export PATH="~/usr/local/bin/:$PATH"
+
 # Add ruby gems to PATH
 export PATH=$PATH:/home/w96k/.gem/
 export PATH=$PATH:/home/w96k/.gem/ruby/2.5.0/bin/
@@ -16,6 +19,9 @@ export PATH=$PATH:/home/w96k/.gem/ruby/2.5.0/bin/
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI mode
+
+export GUIX_PROFILE="/home/w96k/.guix-profile"
+     . "$GUIX_PROFILE/etc/profile"
 
 streaming() {
     INRES="1280x720" # input resolution
@@ -69,9 +75,25 @@ then
     fi
 fi
 
+# Bash completion (You need to have bash-completion package installed)
+if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -z "${BASH_COMPLETION_VERSINFO-}" ]; then
+
+    # Check for recent enough version of bash.
+    if [ ${BASH_VERSINFO[0]} -gt 4 ] || \
+	   [ ${BASH_VERSINFO[0]} -eq 4 -a ${BASH_VERSINFO[1]} -ge 1 ]; then
+        [ -r "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion" ] && \
+            . "${XDG_CONFIG_HOME:-$HOME/.config}/bash_completion"
+        if shopt -q progcomp && [ -r /gnu/store/9i5d4dsxip5mfrrda0z2mypjg77ypm27-bash-completion-2.8/share/bash-completion/bash_completion ]; then
+            # Source completion code.
+            . /gnu/store/9i5d4dsxip5mfrrda0z2mypjg77ypm27-bash-completion-2.8/share/bash-completion/bash_completion
+        fi
+    fi
+fi
+
+
 if [ "$(tty)" = "/dev/tty1" ]; then
-    herd start &&
-	exec sway
+    #herd start &&
+    exec sway
 fi
     
 if [ -f .bashrc ]

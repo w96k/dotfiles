@@ -61,8 +61,8 @@
 ** Линтер Flymake [built-in]
 #+BEGIN_SRC emacs-lisp
     ;;; Live-checking text
-  (use-package flymake
-    :init (flymake-mode))
+  ;; (use-package flymake
+  ;;   :config (flymake-mode))
 #+END_SRC
 
 ** Дерево отмен
@@ -150,10 +150,18 @@
 ** Поиск (ivy + swiper + councel)
 
 #+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   (use-package ivy
-      :ensure t
       :config
-      (ivy-mode 1)
       (setq ivy-use-virtual-buffers t)
       (setq enable-recursive-minibuffers t)
       (global-set-key "\C-s" 'swiper)
@@ -172,15 +180,8 @@
       (global-set-key (kbd "C-x l") 'counsel-locate)
       (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
       (define-key minibuffer-local-map (kbd "C-r")
-      'counsel-minibuffer-history))
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package swiper
-    :ensure t
-    :after ivy
-    :config
-    (global-set-key "\C-s" 'swiper))
+      'counsel-minibuffer-history)
+      (ivy-mode 1))
 #+END_SRC
 
 ** Автодополнение
@@ -196,8 +197,6 @@
   (company-idle-delay 0)
   (company-tooltip-align-annotation t)
   :hook ((prog-mode . company-mode))
-  :config
-  :init (global-company-mode)
   :bind (:map company-active-map
               ("C-n" . company-select-next)
               ("C-p" . company-select-previous)))
@@ -257,7 +256,7 @@
 ;;; Yasnippet
 (use-package yasnippet
   :diminish
-  :init (yas-global-mode 1))
+  :config (yas-global-mode 1))
 
 (use-package yasnippet-snippets
   :ensure t
@@ -295,22 +294,22 @@
 #+END_SRC
 ** Показывать пробелы
 #+BEGIN_SRC emacs-lisp
-(use-package whitespace-mode
-  :config 
-(progn
- ;; Make whitespace-mode with very basic background coloring for whitespaces.
-  ;; http://ergoemacs.org/emacs/whitespace-mode.html
-  (setq whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark )))
+  ;; (use-package whitespace-mode
+  ;;   :config 
+  ;; (progn
+  ;;  ;; Make whitespace-mode with very basic background coloring for whitespaces.
+  ;;   ;; http://ergoemacs.org/emacs/whitespace-mode.html
+  ;;   (setq whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark )))
 
-  ;; Make whitespace-mode and whitespace-newline-mode use “¶” for end of line char and “▷” for tab.
-  (setq whitespace-display-mappings
-        ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-        '(
-          (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-          (newline-mark 10 [182 10]) ; LINE FEED,
-          (tab-mark 9 [9655 9] [92 9]) ; tab
-          )))
-  (global-whitespace-mode))
+  ;;   ;; Make whitespace-mode and whitespace-newline-mode use “¶” for end of line char and “▷” for tab.
+  ;;   (setq whitespace-display-mappings
+  ;;         ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+  ;;         '(
+  ;;           (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+  ;;           (newline-mark 10 [182 10]) ; LINE FEED,
+  ;;           (tab-mark 9 [9655 9] [92 9]) ; tab
+  ;;           )))
+  ;;   (global-whitespace-mode))
 #+END_SRC
 * Языки программирования
 ** LISP
@@ -339,11 +338,8 @@
 #+END_SRC
 *** REPL Scheme
 #+BEGIN_SRC emacs-lisp
-(use-package emacs-geiser
-  :after yasnippet
-  :config
-  (add-to-list 'geiser-guile-load-path "~/github/guix")
-  (add-to-list 'yas-snippet-dirs "~/github/guix/etc/snippets"))
+(use-package geiser
+  :after yasnippet)
 #+END_SRC
 ** Python
 *** Elpy
@@ -742,17 +738,12 @@
 ;;; Rest client
 (use-package restclient)
 #+END_SRC
-** DJVU 
-#+BEGIN_SRC emacs-lisp
-;;; Djvu
-(use-package djvu)
-#+END_SRC
 ** PDF
 #+BEGIN_SRC emacs-lisp
-;;; PDF Tools
-(use-package pdf-tools
-  :if window-system
-  :config (pdf-loader-install))
+  ;;; PDF Tools
+  ;; (use-package pdf-tools
+  ;;   :if window-system
+  ;;   :config (pdf-tools-install))
 #+END_SRC
 ** Экспорт в HTML
 #+BEGIN_SRC emacs-lisp
