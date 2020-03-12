@@ -17,6 +17,8 @@ set $right l
 set $term urxvt
 
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
+exec dmenu
+#exec mako
 
 exec swayidle -w \
          timeout 300 'swaylock -f -c 000000' \
@@ -31,6 +33,7 @@ exec swayidle -w \
     # Start a terminal
     bindsym $mod+Return exec $term
     bindsym $mod+c exec $term
+    
 
     # Kill focused window
     bindsym $mod++q kill
@@ -163,15 +166,24 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
+# Volume control
+bindsym XF86AudioRaiseVolume exec amixer -q sset Master 5%+ 
+bindsym XF86AudioLowerVolume exec amixer -q sset Master 5%-
+bindsym XF86AudioMute exec amixer -q sset Master toggle
+
 bar {
     position top
 
     # When the status_command prints a new line to stdout, swaybar updates.
     # The default just shows the current date and time.
-    status_command while date +'%Y-%m-%d %H:%M:%S %p'; do sleep 1; done
+    #status_command while date +'%Y-%m-%d %H:%M:%S %p'; do sleep 1; done
+    
+    status_command SCRIPT_DIR=~/.config/i3blocks/ i3blocks
     #swaybar_command waybar
     #status_command while echo 'hello'; do sleep1; done
     strip_workspace_name yes
+
+    #tray_output primary
 
     colors {
         statusline #cccccc

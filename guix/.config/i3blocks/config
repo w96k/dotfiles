@@ -1,0 +1,34 @@
+# Optimized for 1280x800 resolution
+# on thinkpad x200t
+
+[title]
+full_text=<placeholder for pressed keybind>
+align=center
+min_width=600
+
+[cpu]
+command=$SCRIPT_DIR/cpu_usage
+interval=10
+separator=false
+
+
+[temperature]
+command=$SCRIPT_DIR/temp
+interval=10
+
+[memory]
+command=$SCRIPT_DIR/memory
+interval=2
+
+[disk]
+command=$SCRIPT_DIR/disk
+ALERT_LOW=5
+interval=60
+
+[volume]
+command=$SCRIPT_DIR/volume
+interval=1
+
+[time]
+command=date '+%d.%m.%Y %H:%M:%S'
+interval=1
