@@ -1,3 +1,6 @@
+export GUIX_PROFILE="$HOME/.guix-profile"
+source "$HOME/.guix-profile/etc/profile"
+
 # Wayland vars
 export XDG_SESSION_TYPE=wayland
 export SDL_VIDEODRIVER=wayland
@@ -33,7 +36,7 @@ streaming() {
 }
 
 if [ "$(tty)" = "/dev/tty1" ]; then
-    #herd start &&
+    tor &
     exec sway
 fi
 

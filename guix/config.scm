@@ -73,10 +73,8 @@
 
    (service elogind-service-type)
    (service rottlog-service-type)
-   %base-services
-   
-   ;;%powertop-service
-   ))
+   %powertop-service
+   %base-services))
 
 ;; Remove gdm (gdm is default in guix)
 ;; (set! %my-services
@@ -238,10 +236,9 @@
 	  "nss-certs"
 	  "openssh"
 	  "vim"
-	  "xinit"
-	  "xterm"
-	  "setxkbmap"
-	  "xinit"
+	  ;;"xinit"
+	  ;;"xterm"
+	  ;;"setxkbmap"
 	  "rxvt-unicode"
 	  "st"
 	  "node"
@@ -272,7 +269,8 @@
 	  "dmidecode"
 	  "wayland"
 	  "sway"
-	  "dmenu"
+	  "rofi"
+	  "inotify-tools"
 	  "mako"
 	  "tor"
 	  "i3status"
@@ -280,7 +278,7 @@
 	  ;;"waybar"
 	  "gnunet"
 	  "adwaita-icon-theme"
-	  "font-awesome"
+	  ;;"font-awesome"
 	  "dbus"
 	  "glibc-utf8-locales"))
    %base-packages))

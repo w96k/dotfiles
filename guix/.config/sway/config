@@ -16,15 +16,17 @@ set $right l
 
 set $term urxvt
 
-set $menu dmenu_path | dmenu | xargs swaymsg exec --
-exec dmenu
-#exec mako
+bindsym $mod+d exec --no-startup-id "rofi -show drun -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+bindsym $mod+w exec --no-startup-id "rofi -show window -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 
-exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
-         timeout 600 'swaymsg "output * dpms off"' \
-              resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000'
+exec dbus-daemon --session --address=unix:path=$XDG_RUNTIME_DIR/bus
+exec mako
+
+# exec swayidle -w \
+#          timeout 300 'swaylock -f -c 000000' \
+#          timeout 600 'swaymsg "output * dpms off"' \
+#               resume 'swaymsg "output * dpms on"' \
+#          before-sleep 'swaylock -f -c 000000'
 
 ### Key bindings
 #
@@ -36,10 +38,8 @@ exec swayidle -w \
     
 
     # Kill focused window
-    bindsym $mod++q kill
+    bindsym $mod+q kill
 
-    # Start your launcher
-    bindsym $mod+d exec $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -115,7 +115,7 @@ exec swayidle -w \
 
     # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
-    bindsym $mod+w layout tabbed
+    #bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
 
     # Make the current focus fullscreen
@@ -173,14 +173,9 @@ bindsym XF86AudioMute exec amixer -q sset Master toggle
 
 bar {
     position top
-
-    # When the status_command prints a new line to stdout, swaybar updates.
-    # The default just shows the current date and time.
-    #status_command while date +'%Y-%m-%d %H:%M:%S %p'; do sleep 1; done
     
-    status_command SCRIPT_DIR=~/.config/i3blocks/ i3blocks
-    #swaybar_command waybar
-    #status_command while echo 'hello'; do sleep1; done
+    #status_command SCRIPT_DIR=~/.config/i3blocks/ i3blocks
+    
     strip_workspace_name yes
 
     #tray_output primary
@@ -206,4 +201,60 @@ hide_edge_borders vertical
 
 gaps inner 1
 
-#include /gnu/store/08mg9iahnyh4fyrafla3zyb5an2jscb0-sway-1.2/etc/sway/config.d/*
+workspace_auto_back_and_forth on
+focus_on_window_activation focus
+focus_wrapping workspace
+
+set $stump Control+t
+
+assign [class="Emacs"] number "0: Emacs"
+
+mode "stumpwm" {
+
+    # TODO: Prioritize sway keybinding over other ones
+
+    # Launch emacs
+    bindsym e exec emacs
+
+    # Launch terminal
+    bindsym --release c exec "swaymsg mode default; $term;"
+
+    # Kill window
+    bindsym k exec "swaymsg kill; swaymsg mode default;"
+
+    # Navigation
+    bindsym --release Control+p exec "swaymsg workspace prev; swaymsg mode default;"
+    bindsym --release Control+n exec "swaymsg workspace next; swaymsg mode default;"
+    bindsym --release n exec "swaymsg focus down; swaymsg mode default;"
+    bindsym --release p exec "swaymsg focus up; swaymsg mode default;"
+    bindsym --release b exec "swaymsg focus left; swaymsg mode default;"
+    bindsym --release f exec "swaymsg focus right; swaymsg mode default;"
+    bindsym --release t exec "swaymsg workspace current; swaymsg mode default;"
+    bindsym --release Control+t exec "swaymsg workspace current; swaymsg mode default;"
+
+    # Splitting
+    bindsym --release s exec "swaymsg split vertical; swaymsg mode default;"
+    bindsym --release Shift+s exec "swaymsg split horizontal; swaymsg mode default;"
+
+    # Exit stumpwm mode
+    bindsym g mode "default"
+    bindsym Control+g mode "default"
+
+    # Switch to workspace
+    bindsym --release 1 exec "swaymsg workspace 1; swaymsg mode default;"
+    bindsym --release 2 exec "swaymsg workspace 2; swaymsg mode default;"
+    bindsym --release 3 exec "swaymsg workspace 3; swaymsg mode default;"
+    bindsym --release 4 exec "swaymsg workspace 4; swaymsg mode default;"
+    bindsym --release 5 exec "swaymsg workspace 5; swaymsg mode default;"
+    bindsym --release 6 exec "swaymsg workspace 6; waymssg mode default;"
+    bindsym --release 7 exec "swaymsg workspace 7; swaymsg mode default;"
+    bindsym --release 8 exec "swaymsg workspace 8; swaymsg mode default;"
+    bindsym --release 9 exec "swaymsg workspace 9; swaymsg mode default;"
+
+    # List of windows
+    bindsym w exec --no-startup-id "swaymsg mode default; rofi -show window -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+    
+}
+bindsym --release $stump mode "stumpwm"
+
+bindsym $mod+g mode "default"
