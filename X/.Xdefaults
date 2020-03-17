@@ -38,7 +38,7 @@ URxvt.termName: rxvt
 *.color15:      #393939
 
 ! URxvt
-URxvt.font: xft:terminus:pixelsize=14
+URxvt.font: xft:terminus
 URxvt.scrollBar: false
 URxvt.underlineURLs:  True
 URxvt.cursorBlink: True
@@ -56,3 +56,13 @@ Xft.rgba: rgb
 
 ! Change cursor
 Xcursor.theme: Adwaita
+
+! Rofi
+
+! State:           'bg',     'fg',     'bgalt',  'hlbg',   'hlfg'
+rofi.color-normal: #333333,  #cccccc,  #333333,  #f2777a,  #333333
+rofi.color-urgent: #333333,  #cccccc,  #333333,  #2d2d2d,  #cccccc
+rofi.color-active: #333333,  #cccccc,  #333333,  #2d2d2d,  #cccccc
+
+!                  'background', 'border', 'separator'
+rofi.color-window: #666666,      #666666,  #666666

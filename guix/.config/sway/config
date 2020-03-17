@@ -116,7 +116,6 @@ exec mako
     # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
     #bindsym $mod+w layout tabbed
-    bindsym $mod+e layout toggle split
 
     # Make the current focus fullscreen
     bindsym $mod+f fullscreen
@@ -185,13 +184,14 @@ bar {
         background #333333
 	focused_workspace #333333 #aeafad #333333
         inactive_workspace #333333 #333333 #cccccc
+	urgent_workspace #333333 #f2777a #2d2d2d
     }
 }
 
 
 input type:keyboard {
     xkb_layout us,ru
-    xkb_options grp:win_space_toggle,ctrl:nocaps
+    xkb_options grp:win_space_toggle,caps:ctrl_modifier#,ctrl:nocaps
 }
 
 # Change borders
@@ -205,56 +205,81 @@ workspace_auto_back_and_forth on
 focus_on_window_activation focus
 focus_wrapping workspace
 
-set $stump Control+t
+# Default stumpwm keybinding doesn't work, because C-t is used by many programs
+# and sway let other programs to use binded keys.
+set $StumpMod Control+t 
 
-assign [class="Emacs"] number "0: Emacs"
+assign [class="Emacs"] "Editor"
+assign [class="Icecat"] "Browser"
+assign [class="Firefox"] "Browser"
+assign [class="Chromium"] "Browser"
 
 mode "stumpwm" {
+     # Would be nice to have exit from mode after each bind
 
-    # TODO: Prioritize sway keybinding over other ones
+     bindsym --to-code {
+     	 # Launch emacs
+	 e exec emacsclient; workspace "Editor"; mode default;
+    	 shift+e exec emacs; workspace "Editor"; mode default;
+	 
+	 # Launch terminal
+	 c mode default; exec $term;
 
-    # Launch emacs
-    bindsym e exec emacs
+	 # Kill window
+	 k kill; mode default;
 
-    # Launch terminal
-    bindsym --release c exec "swaymsg mode default; $term;"
+    	 # Navigation
+	 n workspace next; mode default;
+	 p workspace prev; mode default;
 
-    # Kill window
-    bindsym k exec "swaymsg kill; swaymsg mode default;"
+	 # Switch to previous workspace
+	 t workspace current; mode default;
+	 Control+t workspace current; mode default;
 
-    # Navigation
-    bindsym --release Control+p exec "swaymsg workspace prev; swaymsg mode default;"
-    bindsym --release Control+n exec "swaymsg workspace next; swaymsg mode default;"
-    bindsym --release n exec "swaymsg focus down; swaymsg mode default;"
-    bindsym --release p exec "swaymsg focus up; swaymsg mode default;"
-    bindsym --release b exec "swaymsg focus left; swaymsg mode default;"
-    bindsym --release f exec "swaymsg focus right; swaymsg mode default;"
-    bindsym --release t exec "swaymsg workspace current; swaymsg mode default;"
-    bindsym --release Control+t exec "swaymsg workspace current; swaymsg mode default;"
+	 # Splitting
+	 s split vertical; mode default;
+	 Shift+s split horizontal; mode default;
 
-    # Splitting
-    bindsym --release s exec "swaymsg split vertical; swaymsg mode default;"
-    bindsym --release Shift+s exec "swaymsg split horizontal; swaymsg mode default;"
+	 # Exit stumpwmm mode
+	 g mode default;
+	 
+	 Control+g mode default;
 
-    # Exit stumpwm mode
-    bindsym g mode "default"
-    bindsym Control+g mode "default"
+         # Select workspace with corresponding digit
+	 0 workspace "0: Emacs"; mode default;
+	 1 workspace 1; mode default;
+	 2 workspace 2; mode default;
+	 3 workspace 3; mode default;
+	 4 workspace 4; mode default;
+	 5 workspace 5; mode default;
+	 6 workspace 6; mode default;
+	 7 workspace 7; mode default;
+	 8 workspace 8; mode default;
+	 9 workspace 9; mode default;
 
-    # Switch to workspace
-    bindsym --release 1 exec "swaymsg workspace 1; swaymsg mode default;"
-    bindsym --release 2 exec "swaymsg workspace 2; swaymsg mode default;"
-    bindsym --release 3 exec "swaymsg workspace 3; swaymsg mode default;"
-    bindsym --release 4 exec "swaymsg workspace 4; swaymsg mode default;"
-    bindsym --release 5 exec "swaymsg workspace 5; swaymsg mode default;"
-    bindsym --release 6 exec "swaymsg workspace 6; waymssg mode default;"
-    bindsym --release 7 exec "swaymsg workspace 7; swaymsg mode default;"
-    bindsym --release 8 exec "swaymsg workspace 8; swaymsg mode default;"
-    bindsym --release 9 exec "swaymsg workspace 9; swaymsg mode default;"
+	 # Choose/find window
+	 apostrophe exec --no-startup-id "swaymsg mode default; rofi -show window"
+
+	 # Combimode
+	 b exec --no-startup-id "swaymsg mode default; rofi -show combi"
+	 
+
+	 # Exec/find shell command
+	 shift+1 exec --no-startup-id "swaymsg mode default; rofi -show run -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
+     }
+
+    # bindsym --to-code n exec "swaymsg focus down; swaymsg mode default;"
+    # bindsym --to-code p exec "swaymsg focus up; swaymsg mode default;"
+    # bindsym --to-code b exec "swaymsg focus left; swaymsg mode default;"
+    # bindsym --to-code f exec "swaymsg focus right; swaymsg mode default;"
 
     # List of windows
     bindsym w exec --no-startup-id "swaymsg mode default; rofi -show window -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
-    
 }
-bindsym --release $stump mode "stumpwm"
+bindsym --to-code $StumpMod mode "stumpwm"
+
+mode "stumpwm-control" {
+
+}
 
 bindsym $mod+g mode "default"
