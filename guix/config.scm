@@ -34,19 +34,26 @@
                   #~(zero? (system* #$(file-append powertop "/sbin/powertop")
                                     "--auto-tune"))))
 
+(define %kvm-udev-rule
+  (udev-rule
+   "90-usb-thing.rules"
+   (string-append "ACTION==\"add\", SUBSYSTEM==\"usb\", "
+		  "ATTR{product}==\"Example\", "
+		  "RUN+=\"/path/to/script\"")))
+
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
    ;;(service shepherd-root-service-type)
    ;;(service slim-service-type)
-   (service dhcp-client-service-type)
+   ;;(service dhcp-client-service-type)
 
    ;;(service wpa-supplicant-service-type)
    ;;(service network-manager-service-type)
 
-   (service libvirt-service-type
-    	    (libvirt-configuration
-   	     (unix-sock-group "libvirt")))
+   ;; (service libvirt-service-type
+   ;;  	    (libvirt-configuration
+   ;; 	     (unix-sock-group "libvirt")))
    ;;x11-socket-directory-service
    ;;(service dbus-root-service-type)
 
@@ -56,7 +63,7 @@
 	     (device "/dev/ttyS4")
 	     (device-type "wacom")))
    
-   ;; (postgresql-service #:extension-packages (list postgis))
+   ;;(postgresql-service #:extension-packages (list postgis))
    ;;(service docker-service-type)
    
    (service tor-service-type)
@@ -71,16 +78,18 @@
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
 
-   (service elogind-service-type)
+   ;;(service elogind-service-type)
    (service rottlog-service-type)
    %powertop-service
-   %base-services))
+   ;;%base-services
+   %desktop-services
+   ))
 
 ;; Remove gdm (gdm is default in guix)
-;; (set! %my-services
-;;   (remove (lambda (service)
-;; 	    (eq? (service-kind service) gdm-service-type))
-;; 	  %my-services))
+(set! %my-services
+  (remove (lambda (service)
+	    (eq? (service-kind service) gdm-service-type))
+	  %my-services))
 
 ;; Emacs + emacs packages
 ;; Commented packages are missed in guix
@@ -166,7 +175,10 @@
 	 "emacs-lispy"
 	 "emacs-emms"
 	 "emacs-which-key"
-	 "emacs-emacsql")))
+	 "emacs-emacsql"
+	 "emacs-slime"
+	 "emacs-slime-company"
+	 )))
 
 (operating-system
  (host-name "Libreboot")
@@ -179,6 +191,7 @@
 		     "console=ttyS0"    ; Redirect logs to different
 					; tty, so system doesn't show
 					; any logs while booting
+		     "KVM" ;enable KVM
 		     ))
  (initrd-modules (append '("i915") %base-initrd-modules))
  (bootloader (bootloader-configuration
@@ -195,6 +208,7 @@
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
 				       "audio" "video"
+				       "kvm"
 				       ;;"docker"
 				       ))
 	       (shell (file-append zsh "/bin/zsh"))
@@ -229,6 +243,7 @@
 	  "font-terminus"
 	  "lilypond"
 	  "fontconfig"
+	  "rlwrap"
 	  "git"
 	  "darcs"
 	  "htop"
@@ -236,9 +251,6 @@
 	  "nss-certs"
 	  "openssh"
 	  "vim"
-	  ;;"xinit"
-	  ;;"xterm"
-	  ;;"setxkbmap"
 	  "rxvt-unicode"
 	  "st"
 	  "node"
@@ -259,11 +271,13 @@
 	  "nix"
 	  "postgresql"
 	  "ghc"
+	  "nim"
+	  "rust"
 	  "cabal-install"
 	  "php"
 	  "alsa-utils"
 	  "mc"
-	  ;;"qemu-minimal"
+	  "qemu-minimal"
 	  "aspell"
 	  "aspell-dict-en"
 	  "dmidecode"
