@@ -19,13 +19,17 @@
  databases
  web
  virtualization
+ nix
+ sound
  docker)
 
 (use-package-modules
+ hurd
  geo
  linux
  bash
  python
+ gnome
  shells)
 
 ;; Run powertop --autotune on boot
@@ -34,39 +38,38 @@
                   #~(zero? (system* #$(file-append powertop "/sbin/powertop")
                                     "--auto-tune"))))
 
-(define %kvm-udev-rule
-  (udev-rule
-   "90-usb-thing.rules"
-   (string-append "ACTION==\"add\", SUBSYSTEM==\"usb\", "
-		  "ATTR{product}==\"Example\", "
-		  "RUN+=\"/path/to/script\"")))
-
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
    ;;(service shepherd-root-service-type)
    ;;(service slim-service-type)
    ;;(service dhcp-client-service-type)
-
-   ;;(service wpa-supplicant-service-type)
-   ;;(service network-manager-service-type)
+   
+   (service wpa-supplicant-service-type)
+   (service network-manager-service-type)
 
    ;; (service libvirt-service-type
    ;;  	    (libvirt-configuration
    ;; 	     (unix-sock-group "libvirt")))
    ;;x11-socket-directory-service
-   ;;(service dbus-root-service-type)
+   (service dbus-root-service-type)
+   (service elogind-service-type)
+   (service nix-service-type)
 
-   ;; Wacom tablet support
+   ;;Wacom tablet support
    (service inputattach-service-type
             (inputattach-configuration
-	     (device "/dev/ttyS4")
-	     (device-type "wacom")))
+   	     (device "/dev/ttyS4")
+   	     (device-type "wacom")))
    
    ;;(postgresql-service #:extension-packages (list postgis))
-   ;;(service docker-service-type)
+   (service docker-service-type)
+   ;;(service pulseaudio-service-type)
+   (service alsa-service-type)
    
    (service tor-service-type)
+
+   (service cleanup-service-type #t)
    ;; Fix unavailable /usr/bin/env
    ;; It's needed by many bash scripts
    (extra-special-file "/usr/bin/env"
@@ -74,22 +77,34 @@
    (extra-special-file "/bin/bash"
                        (file-append bash "/bin/bash"))
    (extra-special-file "/bin/zsh"
-                       (file-append bash "/bin/zsh"))
+                       (file-append zsh "/bin/zsh"))
+   (extra-special-file "/bin/sh"
+                       (file-append zsh "/bin/zsh"))
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
-
+   
    ;;(service elogind-service-type)
-   (service rottlog-service-type)
-   %powertop-service
-   ;;%base-services
-   %desktop-services
+   ;; (service rottlog-service-type)
+   ;;%powertop-service
+   ;;(service gnome-desktop-service-type)
+   ;;(service xfce-desktop-service-type)
+   ;;(set-xorg-configuration
+   ;;(xorg-configuration))
+   x11-socket-directory-service
+   polkit-wheel-service
+   fontconfig-file-system-service
+   (simple-service 'network-manager-applet
+		   profile-service-type
+		   (list network-manager-applet))
+   %base-services
+   ;;%desktop-services
    ))
 
 ;; Remove gdm (gdm is default in guix)
-(set! %my-services
-  (remove (lambda (service)
-	    (eq? (service-kind service) gdm-service-type))
-	  %my-services))
+ (set! %my-services
+   (remove (lambda (service)
+ 	    (eq? (service-kind service) gdm-service-type))
+ 	  %my-services))
 
 ;; Emacs + emacs packages
 ;; Commented packages are missed in guix
@@ -104,6 +119,11 @@
 	 ;;"emacs-mood-line"
 	 ;;"emacs-agressive-indent"
 	 "emacs-guix"
+	 "emacs-edit-indirect"
+	 "emacs-build-farm"
+	 "guile-gcrypt"
+	 "emacs-dash"
+	 "emacs-bui"
 	 "emacs-pdf-tools"
 	 "emacs-magit"
 	 ;;"emacs-magit-gitflow"
@@ -184,14 +204,22 @@
  (host-name "Libreboot")
  (timezone "Europe/Moscow")
  (locale "ru_RU.utf8")
- (kernel-arguments '("processor.max_cstate=2"  ; Disable power savings
-		     "intel_idle.max_cstate=2" ; (cstate 3-4 provides
-					; high freq cpu noice)
+ ;; Waiting for hurd ready to run
+ ;;(kernel hurd)
+ ;; Stick to stable kernel because intel gpu problems
+ (kernel linux-libre-4.19)
+ (kernel-arguments '("processor.max_cstate=0"  ; Disable power savings
+		     "intel_idle.max_cstate=1" ; (cstate 3-4 provides
+ 					; high freq cpu noice)
 		     "intremap=off"     ; Fix for failed to map dmar2
-		     "console=ttyS0"    ; Redirect logs to different
-					; tty, so system doesn't show
-					; any logs while booting
+		     "consoleblank=0"
+		     "ahci.mobile_lpm_policy=1"
+		     ;;"console=ttyS0"    ; Redirect logs to different
+ 					; tty, so system doesn't show
+ 					; any logs while booting
 		     "KVM" ;enable KVM
+		     "i915.enable_guc=-1"
+		     "i915.enable_dc=0" ; Disable cstate for gpu
 		     ))
  (initrd-modules (append '("i915") %base-initrd-modules))
  (bootloader (bootloader-configuration
@@ -208,8 +236,7 @@
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
 				       "audio" "video"
-				       "kvm"
-				       ;;"docker"
+				       "kvm" "docker"
 				       ))
 	       (shell (file-append zsh "/bin/zsh"))
 	       (home-directory "/home/w96k"))
@@ -224,7 +251,9 @@
 	  "zsh"
 	  "zsh-autosuggestions"
 	  "curl"
-	  "xf86-video-intel"
+	  ;;"xf86-video-intel"
+	  ;;"xorg-server"
+	  ;;"libva"
 	  "patchelf"
 	  "binutils"
 	  "gcc-toolchain"
@@ -260,6 +289,10 @@
 	  "python-virtualenv"
 	  "python-jedi"
 	  "python-ipython"
+	  "python-autopep8"
+	  "python-black"
+	  "neofetch"
+	  "mpv"
 	  ;;"openjdk@12"
 	  "icedtea"
 	  "clojure"
@@ -286,15 +319,18 @@
 	  "rofi"
 	  "inotify-tools"
 	  "mako"
-	  "tor"
+	  ;;"tor"
 	  "i3status"
 	  "i3blocks"
 	  ;;"waybar"
-	  "gnunet"
+	  ;;"gnunet"
 	  "adwaita-icon-theme"
 	  ;;"font-awesome"
 	  "dbus"
-	  "glibc-utf8-locales"))
+	  "p7zip"
+	  "glibc-utf8-locales"
+	  "gvfs"
+	  ))
    %base-packages))
 
  (services  %my-services)
