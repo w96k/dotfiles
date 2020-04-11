@@ -41,19 +41,12 @@
 ;; My modification of %desktop-services
 (define %my-services
   (cons*
-   ;;(service shepherd-root-service-type)
-   ;;(service slim-service-type)
-   ;;(service dhcp-client-service-type)
-   
-   (service wpa-supplicant-service-type)
-   (service network-manager-service-type)
 
    ;; (service libvirt-service-type
    ;;  	    (libvirt-configuration
    ;; 	     (unix-sock-group "libvirt")))
    ;;x11-socket-directory-service
-   (service dbus-root-service-type)
-   (service elogind-service-type)
+
    (service nix-service-type)
 
    ;;Wacom tablet support
@@ -64,41 +57,36 @@
    
    ;;(postgresql-service #:extension-packages (list postgis))
    (service docker-service-type)
-   ;;(service pulseaudio-service-type)
    (service alsa-service-type)
    
    (service tor-service-type)
 
    (service cleanup-service-type #t)
    ;; Fix unavailable /usr/bin/env
-   ;; It's needed by many bash scripts
+   ;; It's needed by many shell scripts
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
    (extra-special-file "/bin/bash"
                        (file-append bash "/bin/bash"))
    (extra-special-file "/bin/zsh"
                        (file-append zsh "/bin/zsh"))
-   (extra-special-file "/bin/sh"
-                       (file-append zsh "/bin/zsh"))
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
    
-   ;;(service elogind-service-type)
-   ;; (service rottlog-service-type)
+   (service rottlog-service-type)
    ;;%powertop-service
-   ;;(service gnome-desktop-service-type)
-   ;;(service xfce-desktop-service-type)
-   ;;(set-xorg-configuration
-   ;;(xorg-configuration))
+
    x11-socket-directory-service
+   (service network-manager-service-type)
+   (service wpa-supplicant-service-type)
+   (service dbus-root-service-type)
    polkit-wheel-service
    fontconfig-file-system-service
+   (service elogind-service-type)
    (simple-service 'network-manager-applet
 		   profile-service-type
 		   (list network-manager-applet))
-   %base-services
-   ;;%desktop-services
-   ))
+   %base-services))
 
 ;; Remove gdm (gdm is default in guix)
  (set! %my-services
@@ -207,11 +195,10 @@
  ;; Waiting for hurd ready to run
  ;;(kernel hurd)
  ;; Stick to stable kernel because intel gpu problems
- (kernel linux-libre-4.19)
+ (kernel linux-libre)
  (kernel-arguments '("processor.max_cstate=0"  ; Disable power savings
 		     "intel_idle.max_cstate=1" ; (cstate 3-4 provides
  					; high freq cpu noice)
-		     "intremap=off"     ; Fix for failed to map dmar2
 		     "consoleblank=0"
 		     "ahci.mobile_lpm_policy=1"
 		     ;;"console=ttyS0"    ; Redirect logs to different
@@ -220,8 +207,13 @@
 		     "KVM" ;enable KVM
 		     "i915.enable_guc=-1"
 		     "i915.enable_dc=0" ; Disable cstate for gpu
+
+		     "intremap=off"     ; Fix for failed to map dmar2
+		     
+		     ;;"intel_iommu=on"
+		     ;;"iommu=pt"
 		     ))
- (initrd-modules (append '("i915") %base-initrd-modules))
+ (initrd-modules (append '("i915") %base-initrd-modules)) 
  (bootloader (bootloader-configuration
 	      (bootloader grub-bootloader)
 	      (target "/dev/sda")))
@@ -253,7 +245,10 @@
 	  "curl"
 	  ;;"xf86-video-intel"
 	  ;;"xorg-server"
-	  ;;"libva"
+	  "libva"
+	  "mesa"
+	  "mesa-utils"
+	  "intel-vaapi-driver"
 	  "patchelf"
 	  "binutils"
 	  "gcc-toolchain"
@@ -308,6 +303,7 @@
 	  "rust"
 	  "cabal-install"
 	  "php"
+	  "lua"
 	  "alsa-utils"
 	  "mc"
 	  "qemu-minimal"
@@ -329,8 +325,7 @@
 	  "dbus"
 	  "p7zip"
 	  "glibc-utf8-locales"
-	  "gvfs"
-	  ))
+	  "gvfs"))
    %base-packages))
 
  (services  %my-services)
