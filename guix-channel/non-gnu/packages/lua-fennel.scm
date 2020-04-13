@@ -24,8 +24,6 @@
    (build-system trivial-build-system)
    (inputs
     `(("lua" ,lua)))
-   (native-inputs
-    `(("make" ,gnu-make)))
    (arguments
     `(#:modules ((guix build utils))
       #:builder
@@ -34,7 +32,6 @@
 
 	(let ((out (assoc-ref %outputs "out"))
 	      (coreutils (assoc-ref %build-inputs "coreutils"))
-	      (make (assoc-ref %build-inputs "make"))
 	      (source (assoc-ref %build-inputs "source")))
 
 	  (mkdir (string-append source "/bin"))
@@ -42,7 +39,6 @@
 	    (lambda (port)
 	      (display "#!/bin/sh\n../fennel" port)))
 	  ;;(invoke (string-append coreutils "/bin/chmod") "+x" (string-append out "/bin/fennel"))
-	  ;;(invoke (string-append make "/bin/make") "-C" out)
 	  (mkdir out)
 	  (copy-recursively source out)))))
    (synopsis "Lua Lisp Language.")
