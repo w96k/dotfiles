@@ -69,7 +69,7 @@ configuration {
 /*	display-drun: ;*/
 /*	display-combi: ;*/
 /*	display-keys: ;*/
-/*	kb-primary-paste: "Control+V,Shift+Insert";*/
+	kb-primary-paste: "Control+V,Shift+Insert,Control+y";
 /*	kb-secondary-paste: "Control+v,Insert";*/
 /*	kb-clear-line: "Control+w";*/
 /*	kb-move-front: "Control+a";*/

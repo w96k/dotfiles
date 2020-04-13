@@ -6,7 +6,8 @@
 ;; Feel free to use it
 ;; https://w96k.ru
 
-(use-modules (gnu) (gnu system nss)             
+(use-modules (gnu) (gnu system nss)
+             (guix build emacs-utils)
              (srfi srfi-1))
 
 (use-service-modules
@@ -45,7 +46,6 @@
    ;; (service libvirt-service-type
    ;;  	    (libvirt-configuration
    ;; 	     (unix-sock-group "libvirt")))
-   ;;x11-socket-directory-service
 
    (service nix-service-type)
 
@@ -56,24 +56,22 @@
    	     (device-type "wacom")))
    
    ;;(postgresql-service #:extension-packages (list postgis))
-   (service docker-service-type)
+   ;;(service docker-service-type)
    (service alsa-service-type)
    
    (service tor-service-type)
 
-   (service cleanup-service-type #t)
+   ;;(service cleanup-service-type #t)
    ;; Fix unavailable /usr/bin/env
    ;; It's needed by many shell scripts
    (extra-special-file "/usr/bin/env"
                        (file-append coreutils "/bin/env"))
-   (extra-special-file "/bin/bash"
-                       (file-append bash "/bin/bash"))
    (extra-special-file "/bin/zsh"
                        (file-append zsh "/bin/zsh"))
    (extra-special-file "/bin/python"
                        (file-append python "/bin/python"))
    
-   (service rottlog-service-type)
+   ;;(service rottlog-service-type)
    ;;%powertop-service
 
    x11-socket-directory-service
@@ -81,12 +79,17 @@
    (service wpa-supplicant-service-type)
    (service dbus-root-service-type)
    polkit-wheel-service
-   fontconfig-file-system-service
+   ;;fontconfig-file-system-service
    (service elogind-service-type)
-   (simple-service 'network-manager-applet
-		   profile-service-type
-		   (list network-manager-applet))
-   %base-services))
+   ;; (simple-service 'network-manager-applet
+   ;; 		   profile-service-type
+   ;; 		   (list network-manager-applet))
+
+   (modify-services %base-services
+		    (guix-service-type config =>
+				       (guix-configuration (inherit config)
+							   (substitute-urls '("http://ci.guix.gnu.org"
+									      "https://berlin.guixsd.org")))))))
 
 ;; Remove gdm (gdm is default in guix)
  (set! %my-services
@@ -209,6 +212,9 @@
 		     "i915.enable_dc=0" ; Disable cstate for gpu
 
 		     "intremap=off"     ; Fix for failed to map dmar2
+
+		     "logo.nologo"
+		     "loglevel=4"
 		     
 		     ;;"intel_iommu=on"
 		     ;;"iommu=pt"
@@ -228,18 +234,19 @@
 	       (group "users")
 	       (supplementary-groups '("wheel" "netdev"
 				       "audio" "video"
-				       "kvm" "docker"
+				       "kvm" ;;"docker"
 				       ))
-	       (shell (file-append zsh "/bin/zsh"))
+	       ;;(shell (file-append zsh "/bin/zsh"))
 	       (home-directory "/home/w96k"))
 	      %base-user-accounts))
  (packages
   (append
    %emacs
+   %base-packages
    (map specification->package
 	'(
-	  "bash"
-	  "bash-completion"
+	  ;; "bash"
+	  ;; "bash-completion"
 	  "zsh"
 	  "zsh-autosuggestions"
 	  "curl"
@@ -253,7 +260,6 @@
 	  "binutils"
 	  "gcc-toolchain"
 	  "make"
-	  "glibc"
 	  "stow"
 	  "icecat"
 	  ;;"next"
@@ -294,8 +300,8 @@
 	  "clojure-tools-cli"
 	  "bundler"
 	  "sbcl"
-	  "docker"
-	  "docker-cli"
+	  ;;"docker"
+	  ;;"docker-cli"
 	  "nix"
 	  "postgresql"
 	  "ghc"
@@ -322,11 +328,10 @@
 	  ;;"gnunet"
 	  "adwaita-icon-theme"
 	  ;;"font-awesome"
-	  "dbus"
 	  "p7zip"
 	  "glibc-utf8-locales"
-	  "gvfs"))
-   %base-packages))
+	  ;;"gvfs"
+	  ))))
 
  (services  %my-services)
  

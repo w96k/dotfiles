@@ -13,9 +13,9 @@
   (url "https://gitlab.com/hu.moonstone/cl-guix.git")
   (branch "master"))
 
- (channel
-  (name 'nonguix)
-  (url "https://gitlab.com/nonguix/nonguix"))
+ ;; (channel
+ ;;  (name 'nonguix)
+ ;;  (url "https://gitlab.com/nonguix/nonguix"))
 
  ;; (channel
  ;;  (name 'Brett)

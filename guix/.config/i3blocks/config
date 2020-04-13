@@ -1,11 +1,6 @@
 # Optimized for 1280x800 resolution
 # on thinkpad x200t
 
-[title]
-full_text=<placeholder for pressed keybind>
-align=center
-min_width=600
-
 [cpu]
 command=$SCRIPT_DIR/cpu_usage
 interval=10

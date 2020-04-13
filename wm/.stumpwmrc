@@ -9,7 +9,7 @@
 (set-prefix-key (kbd "C-t"))
 
 (set-module-dir "~/stumpwm/contrib")
-(ql:quickload :clx-truetype)
+;;(ql:quickload :clx-truetype)
 
 (load-module "battery-portable")
 (load-module "cpu")
@@ -21,7 +21,7 @@
 ;;(load-module "screenshot")
 ;;(load-module "ttf-fonts")
 
-(clx-truetype:cache-fonts)
+;;(clx-truetype:cache-fonts)
 
 (print *time-modeline-string*)
 

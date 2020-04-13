@@ -30,10 +30,8 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; (eval-when-compile
-;;   (require 'use-package))
-
-(require 'use-package)
+(eval-when-compile
+  (require 'use-package))
 
 (use-package use-package-ensure-system-package
   :ensure t)
@@ -41,14 +39,20 @@
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-copy-env "PATH")
-    (exec-path-from-shell-copy-env "PYTHONPATH")
+    (exec-path-from-shell-copy-env "GUILE_LOAD_PATH")
     (exec-path-from-shell-initialize)))
 
 (require 'diminish)
 (require 'bind-key)
 
 (org-babel-load-file "~/.emacs-config.org")
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(highlight-indentation-face ((t (:inherit git-gutter+-unchanged)))))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -56,10 +60,4 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (keycast org-mime flycheck-lilypond flymd epresent org-journal intero vue-mode js2-mode jinja2-mode elpy mwim yasnippet-snippets column-enforce-mode pos-tip swiper ivy browse-kill-ring git-gutter+ magit-gitflow magit aggressive-indent mood-line color-theme-sanityinc-tomorrow auto-package-update use-package))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(highlight-indentation-face ((t (:inherit git-gutter+-unchanged)))))
+    (emojify zzz-to-char yasnippet-snippets vue-mode use-package-ensure-system-package pos-tip org-mime org-journal mwim mood-line magit-gitflow keycast js2-mode jinja2-mode intero git-gutter+ flymd flycheck-lilypond fennel-mode epresent elpy counsel column-enforce-mode color-theme-sanityinc-tomorrow browse-kill-ring auto-package-update aggressive-indent))))

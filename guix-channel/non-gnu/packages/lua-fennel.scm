@@ -37,13 +37,13 @@
 	      (make (assoc-ref %build-inputs "make"))
 	      (source (assoc-ref %build-inputs "source")))
 
-	  (mkdir out)
-	  (mkdir (string-append out "/bin"))
-	  (call-with-output-file (string-append out "/bin/fennel")
+	  (mkdir (string-append source "/bin"))
+	  (call-with-output-file (string-append source "/bin/fennel")
 	    (lambda (port)
 	      (display "#!/bin/sh\n../fennel" port)))
-	  (invoke (string-append coreutils "/bin/chmod") "+x" (string-append out "/bin/fennel"))
+	  ;;(invoke (string-append coreutils "/bin/chmod") "+x" (string-append out "/bin/fennel"))
 	  ;;(invoke (string-append make "/bin/make") "-C" out)
+	  (mkdir out)
 	  (copy-recursively source out)))))
    (synopsis "Lua Lisp Language.")
    (description "Fennel is a lisp that compiles to Lua. It aims to be

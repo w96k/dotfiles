@@ -12,3 +12,5 @@ zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
 _comp_options+=(globdots)		# Include hidden files.
+
+#source /run/current-system/profile/etc/profile.d/nix.sh

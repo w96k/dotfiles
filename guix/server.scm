@@ -73,12 +73,12 @@
   (cons*
    (postgresql-service #:extension-packages (list postgis))
    (service openssh-service-type)
-;;   (service dhcpd-service-type 
-;;	(dhcpd-configuration
-;;		(interfaces '("enp0s25"))))
+   ;;   (service dhcpd-service-type 
+   ;;	(dhcpd-configuration
+   ;;		(interfaces '("enp0s25"))))
 
-;;   (service dhcp-client-service-type)
-   (service zabbix-server-service-type)
+   ;;   (service dhcp-client-service-type)
+   ;;(service zabbix-server-service-type)
    %base-services))
 
  ;; Allow resolution of '.local' host names with mDNS.

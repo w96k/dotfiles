@@ -19,20 +19,20 @@
 ** Назначение шрифта
 А также отступа между строк
 #+BEGIN_SRC emacs-lisp
-;;; Set font
-(add-to-list 'default-frame-alist '(font . "terminus-10"))
-(set-face-attribute 'default nil :font "-*-terminus-medium-r-*-*-*-125-75-75-*-*-iso8859-15")
-(setq-default line-spacing 0)
+  ;;; Set font
+  ;; (add-to-list 'default-frame-alist '(font . "terminus-10"))
+  ;; (set-face-attribute 'default nil :font "-xos4-Terminus-normal-normal-normal-*-16-*-*-*-c-80-iso10646-1")
+  (setq-default line-spacing 0)
 #+END_SRC
 
 ** Назначение темы
 Вы ее в видите в блоках кода
 #+BEGIN_SRC emacs-lisp
-;;; Load a theme
-;;; https://emacsthemes.com/themes/sanityinc-tomorrow-themes.html
-(use-package color-theme-sanityinc-tomorrow
-  :ensure
-  :config (load-theme 'sanityinc-tomorrow-eighties t))
+  ;;; Load a theme
+  ;;; https://emacsthemes.com/themes/sanityinc-tomorrow-themes.html
+  (use-package color-theme-sanityinc-tomorrow
+    :ensure
+    :config (load-theme 'sanityinc-tomorrow-eighties t))
 #+END_SRC
 
 ** Отображение номера строк
@@ -339,7 +339,9 @@
 *** REPL Scheme
 #+BEGIN_SRC emacs-lisp
 (use-package geiser
-  :after yasnippet)
+  :config 
+  (defun geiser-guile--version (binary)
+  "3.0.2"))
 #+END_SRC
 ** Python
 *** Elpy
@@ -488,6 +490,27 @@
   :hook (clojure-mode . clj-refactor-mode)
   :config 
   ((cljr-add-keybindings-with-prefix "C-c C-m")))
+#+END_SRC
+** Common Lisp
+*** REPL
+#+BEGIN_SRC emacs-lisp
+(use-package slime
+  :config
+
+  (setq slime-contribs '(slime-fancy slime-repl slime-banner)))
+#+END_SRC
+** Fennel
+#+BEGIN_SRC emacs-lisp
+(use-package fennel-mode
+  :ensure
+  :config
+(define-key fennel-mode-map (kbd "C-c C-k")
+     (defun pnh-fennel-hotswap ()
+       (interactive)
+       (comint-send-string
+        (inferior-lisp-proc)
+        (format "(lume.hotswap \"%s\")\n"
+                (substring (file-name-nondirectory (buffer-file-name)) 0 -4))))))
 #+END_SRC
 * Языки декларирования
 ** SQL
@@ -679,7 +702,7 @@
 *** Плавный скролл
 #+BEGIN_SRC emacs-lisp
 ;; Smooth scrolling
-(setq redisplay-dont-pause t
+(setq redisplay-dont-pause nil
   scroll-margin 10
   scroll-step 1
   scroll-conservatively 10000
@@ -698,6 +721,20 @@
     (which-key-mode))
 #+END_SRC
 ** Системные пакеты
+*** Guix
+#+BEGIN_SRC emacs-lisp
+  (use-package guix-autoloads
+  :after geiser
+  :config
+  (setq guix-repl-use-latest t)
+  (setq guix-guile-program "guile"))
+
+  (use-package edit-indirect)
+  (use-package build-farm)
+  (use-package dash)
+  (use-package bui)
+
+#+END_SRC
 *** Docker
 #+BEGIN_SRC emacs-lisp
 ;;; Manage docker in emacs

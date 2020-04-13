@@ -14,7 +14,7 @@ set $down j
 set $up k
 set $right l
 
-set $term urxvt
+set $term wterm
 
 bindsym $mod+d exec --no-startup-id "rofi -show drun -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
 bindsym $mod+w exec --no-startup-id "rofi -show window -run-shell-command '{terminal} -e \\" {cmd}; read -n 1 -s\\"'"
@@ -220,7 +220,8 @@ mode "stumpwm" {
      bindsym --to-code {
      	 # Launch emacs
 	 e exec emacsclient; workspace "Editor"; mode default;
-    	 shift+e exec emacs; workspace "Editor"; mode default;
+	 
+    	 shift+e exec "if ps auxf | grep -c emacs > 1; then swaymsg '[class=Emacs] focus'; else swaymsg exec 'emacs'; fi; swaymsg 'mode default'";
 	 
 	 # Launch terminal
 	 c mode default; exec $term;
@@ -278,8 +279,6 @@ mode "stumpwm" {
 }
 bindsym --to-code $StumpMod mode "stumpwm"
 
-mode "stumpwm-control" {
-
-}
+bindsym --to-code $mod+n exec --no-startup-id "rofi -show window"
 
 bindsym $mod+g mode "default"

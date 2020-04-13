@@ -20,8 +20,11 @@ export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 export VISUAL="emacsclient -c -a emacs" # $VISUAL opens in GUI mode
 
-export GUIX_PROFILE="/home/w96k/.guix-profile"
-     . "$GUIX_PROFILE/etc/profile"
+export GUIX_PROFILE="$HOME/.guix-profile"
+. "$GUIX_PROFILE/etc/profile"
+
+#source "$HOME/.guix-profile/etc/profile"
+#source "$HOME/.config/guix/current/etc/profile"
 
 streaming() {
     INRES="1280x720" # input resolution
@@ -91,10 +94,10 @@ if [ -n "${BASH_VERSION-}" -a -n "${PS1-}" -a -z "${BASH_COMPLETION_VERSINFO-}" 
 fi
 
 
-if [ "$(tty)" = "/dev/tty1" ]; then
+#if [ "$(tty)" = "/dev/tty1" ]; then
     #herd start &&
-    exec sway
-fi
+#    exec sway
+#fi
     
 if [ -f .bashrc ]
 then
