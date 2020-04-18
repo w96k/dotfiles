@@ -1,4 +1,4 @@
-URxvt.termName: rxvt
+URxvt.termName: rxvt-256color
 
 !TomorrowNightEighties
 *.foreground:   #cccccc
@@ -37,23 +37,36 @@ URxvt.termName: rxvt
 *.color7:       #515151
 *.color15:      #393939
 
+! Xterm
+XTerm.vt100*faceName: Fira Code
+XTerm*faceSize: 9
+XTerm*renderFont: true
+
 ! URxvt
-URxvt.font: xft:terminus
+URxvt.font: xft: Fira Mono:style=Regular:size=10.5
+URxvt.boldFont: xft:Fira Mono:style=Bold:size=10.5
+URxvt.italicFont: xft:Fira Mono:style=Light:size=10.5
+URxvt.letterSpace: -1
 URxvt.scrollBar: false
+URxvt.urlLauncher: icecat
 URxvt.underlineURLs:  True
 URxvt.cursorBlink: True
-Urxvt.cursorUnderline: True
+nUrxvt.cursorUnderline: True
 Urxvt.visualBell: True
 Urxvt.fading: 50
 Urxvt.fadeColor: #ff0000
 
+! Emacs
+Emacs.fontBackend: xft
+Emacs.font: Fira Code:size=14
+
+! Font Settings
 Xft.autohint: 0
 Xft.lcdfilter: lcddefault
-Xft.hintstyle: hintslight
-Xft.hinting: 0
+Xft.hintstyle: hintfull
+Xft.hinting: 1
 Xft.antialias: 1
 Xft.rgba: rgb
-
 ! Change cursor
 Xcursor.theme: Adwaita
 

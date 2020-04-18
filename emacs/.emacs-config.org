@@ -16,15 +16,21 @@
   (auto-package-update-maybe))
 #+END_SRC
 * Внешний вид
-** Назначение шрифта
+** Назначение шрифта и лигатур
 А также отступа между строк
 #+BEGIN_SRC emacs-lisp
   ;;; Set font
-  ;; (add-to-list 'default-frame-alist '(font . "terminus-10"))
-  ;; (set-face-attribute 'default nil :font "-xos4-Terminus-normal-normal-normal-*-16-*-*-*-c-80-iso10646-1")
+  ;;(set-frame-font "terminus 12" nil t)
+  (add-to-list 'default-frame-alist '(font . "Fira Code-10.5"))
+  (set-frame-font "Fira Code-10.5" nil t)
   (setq-default line-spacing 0)
-#+END_SRC
 
+(use-package fira-code-mode
+  :ensure
+  :config (global-fira-code-mode))
+
+(global-prettify-symbols-mode)
+#+END_SRC
 ** Назначение темы
 Вы ее в видите в блоках кода
 #+BEGIN_SRC emacs-lisp
@@ -37,19 +43,16 @@
 
 ** Отображение номера строк
 #+BEGIN_SRC emacs-lisp  
-;;; Display numbers
-(use-package display-line-numbers
-  :init
-  (setq display-line-numbers-type 'relative)
-  (global-display-line-numbers-mode))
+  ;;; Отображение номера строки ненужно из-за наличия avy-jump
+  ;; (use-package display-line-numbers
+  ;;   :init
+  ;;   (setq display-line-numbers-type 'relative)
+  ;;   (global-display-line-numbers-mode))
 #+END_SRC
 ** Мод-лайн
 #+BEGIN_SRC emacs-lisp
-  (use-package mood-line
-    :ensure t
-    :config
-    (setq mood-line-show-encoding-information t)
-    (mood-line-mode))
+(custom-set-faces
+ '(mode-line ((t (:background "#2d2d2d" :foreground "#cccccc" :box (:line-width 1 :color "#2d2d2d" :style released-button) :weight bold :height 1.0 :family "Fira Code")))))
 #+END_SRC
 ** Подсвечивать текущую строку
 #+BEGIN_SRC emacs-lisp
@@ -57,14 +60,22 @@
   (when (display-graphic-p)
   (global-hl-line-mode))
 #+END_SRC
+** Эмодзи (для telega.el)
+#+BEGIN_SRC emacs-lisp
+(use-package emojify
+  :config
+  (global-emojify-mode)
+  (global-emojify-mode-line-mode))
+#+END_SRC
 * Редактирование кода в общем
 ** Линтер Flymake [built-in]
 #+BEGIN_SRC emacs-lisp
-    ;;; Live-checking text
-  ;; (use-package flymake
-  ;;   :config (flymake-mode))
-#+END_SRC
+      ;;; Live-checking text
+    ;; (use-package flymake
+    ;; :config (flymake-mode))
 
+  (global-flycheck-mode)
+#+END_SRC
 ** Дерево отмен
 #+BEGIN_SRC emacs-lisp
   ;;; Undo system
@@ -79,6 +90,10 @@
 (use-package aggressive-indent
   :ensure t
   :config (global-aggressive-indent-mode))
+#+END_SRC
+** SSH
+#+BEGIN_SRC emacs-lisp
+(use-package ssh-agency)
 #+END_SRC
 ** Система контроля версий
 *** Magit
@@ -143,9 +158,10 @@
 #+END_SRC
 ** Прыжки
 #+BEGIN_SRC emacs-lisp
-(use-package ace-jump-mode
+(use-package avy
   :config 
-  (define-key global-map (kbd "C-c s") 'ace-jump-mode))
+  (define-key global-map (kbd "C-c s") 'avy-goto-char)
+  (define-key global-map (kbd "C-c l") 'avy-goto-line))
 #+END_SRC
 ** Поиск (ivy + swiper + councel)
 
@@ -183,7 +199,6 @@
       'counsel-minibuffer-history)
       (ivy-mode 1))
 #+END_SRC
-
 ** Автодополнение
 #+BEGIN_SRC emacs-lisp
 (use-package pos-tip
@@ -198,8 +213,8 @@
   (company-tooltip-align-annotation t)
   :hook ((prog-mode . company-mode))
   :bind (:map company-active-map
-              ("C-n" . company-select-next)
-              ("C-p" . company-select-previous)))
+	      ("C-n" . company-select-next)
+	      ("C-p" . company-select-previous)))
 
 (use-package company-quickhelp
   :after company pos-tip
@@ -211,7 +226,7 @@
 (use-package projectile
   :diminish
   :bind (("s-p" . projectile-command-map)
-         ("C-c p" . projectile-command-map))
+	 ("C-c p" . projectile-command-map))
   :config
   (projectile-global-mode))
 #+END_SRC
@@ -220,10 +235,10 @@
 ;;; Jump to defenition
 (use-package dumb-jump
   :bind (("M-g o" . dumb-jump-go-other-window)
-         ("M-g j" . dumb-jump-go)
-         ("M-g i" . dumb-jump-go-prompt)
-         ("M-g x" . dumb-jump-go-prefer-external)
-         ("M-g z" . dumb-jump-go-prefer-external-other-window)))
+	 ("M-g j" . dumb-jump-go)
+	 ("M-g i" . dumb-jump-go-prompt)
+	 ("M-g x" . dumb-jump-go-prefer-external)
+	 ("M-g z" . dumb-jump-go-prefer-external-other-window)))
 #+END_SRC
 
 ** Hydra
@@ -256,10 +271,12 @@
 ;;; Yasnippet
 (use-package yasnippet
   :diminish
+  :defer
   :config (yas-global-mode 1))
 
 (use-package yasnippet-snippets
   :ensure t
+  :defer
   :diminish
   :after yasnippet)
 #+END_SRC
@@ -293,23 +310,18 @@
 (use-package sudo-edit)
 #+END_SRC
 ** Показывать пробелы
+   Не работает
 #+BEGIN_SRC emacs-lisp
-  ;; (use-package whitespace-mode
-  ;;   :config 
-  ;; (progn
-  ;;  ;; Make whitespace-mode with very basic background coloring for whitespaces.
-  ;;   ;; http://ergoemacs.org/emacs/whitespace-mode.html
-  ;;   (setq whitespace-style (quote (face spaces tabs newline space-mark tab-mark newline-mark )))
-
-  ;;   ;; Make whitespace-mode and whitespace-newline-mode use “¶” for end of line char and “▷” for tab.
-  ;;   (setq whitespace-display-mappings
-  ;;         ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
-  ;;         '(
-  ;;           (space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
-  ;;           (newline-mark 10 [182 10]) ; LINE FEED,
-  ;;           (tab-mark 9 [9655 9] [92 9]) ; tab
-  ;;           )))
-  ;;   (global-whitespace-mode))
+(use-package whitespace
+  :config 
+  (progn
+  (setq whitespace-style (quote (face indentation indentation::space indentation::tab)))
+  (setq whitespace-space 'underline)
+    (setq whitespace-display-mappings
+	  '((space-mark 32 [183] [46])
+	    (tab-mark 9 [9655 9] [92 9])
+	    )))
+    (global-whitespace-mode))
 #+END_SRC
 * Языки программирования
 ** LISP
@@ -325,12 +337,6 @@
 ;;; Parens editing
 (use-package paredit)
 #+END_SRC
-*** Библиотеки
-**** Работа со строками
-#+BEGIN_SRC emacs-lisp
-;;; Emacs Lisp string manipulation
-(use-package s)
-#+END_SRC
 *** Автокомлпит Scheme
 #+BEGIN_SRC emacs-lisp
 (use-package scheme-complete
@@ -338,10 +344,7 @@
 #+END_SRC
 *** REPL Scheme
 #+BEGIN_SRC emacs-lisp
-(use-package geiser
-  :config 
-  (defun geiser-guile--version (binary)
-  "3.0.2"))
+(use-package geiser)
 #+END_SRC
 ** Python
 *** Elpy
@@ -409,12 +412,12 @@
   (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
   (setq-default js2-basic-offset 2)
   (add-hook 'js2-mode-hook
-            (lambda ()
-              (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
-              (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
-              (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
-              (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
-              (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
+	    (lambda ()
+	      (define-key js-mode-map (kbd "C-x C-e") 'nodejs-repl-send-last-expression)
+	      (define-key js-mode-map (kbd "C-c C-j") 'nodejs-repl-send-line)
+	      (define-key js-mode-map (kbd "C-c C-r") 'nodejs-repl-send-region)
+	      (define-key js-mode-map (kbd "C-c C-l") 'nodejs-repl-load-file)
+	      (define-key js-mode-map (kbd "C-c C-z") 'nodejs-repl-switch-to-repl))))
 #+END_SRC
 *** Node.js REPL
 #+BEGIN_SRC emacs-lisp
@@ -461,12 +464,12 @@
   :init
   (progn
     (setq parinfer-extensions
-          '(defaults       ; should be included.
-            pretty-parens  ; different paren styles for different modes.
-            lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
-            paredit        ; Introduce some paredit commands.
-            smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
-            smart-yank))   ; Yank behavior depend on mode.
+	  '(defaults       ; should be included.
+	    pretty-parens  ; different paren styles for different modes.
+	    lispy          ; If you use Lispy. With this extension, you should install Lispy and do not enable lispy-mode directly.
+	    paredit        ; Introduce some paredit commands.
+	    smart-tab      ; C-b & C-f jump positions and smart shift with tab & S-tab.
+	    smart-yank))   ; Yank behavior depend on mode.
     (add-hook 'clojure-mode-hook #'parinfer-mode)
     (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
     (add-hook 'common-lisp-mode-hook #'parinfer-mode)
@@ -508,9 +511,9 @@
      (defun pnh-fennel-hotswap ()
        (interactive)
        (comint-send-string
-        (inferior-lisp-proc)
-        (format "(lume.hotswap \"%s\")\n"
-                (substring (file-name-nondirectory (buffer-file-name)) 0 -4))))))
+	(inferior-lisp-proc)
+	(format "(lume.hotswap \"%s\")\n"
+		(substring (file-name-nondirectory (buffer-file-name)) 0 -4))))))
 #+END_SRC
 * Языки декларирования
 ** SQL
@@ -536,17 +539,17 @@
 (use-package org
   :config
   (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "MIGRATE(m)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+	(quote ((sequence "TODO(t)" "MIGRATE(m)" "|" "DONE(d)")
+		(sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
   (setq org-todo-keyword-faces
-        (quote (("TODO" :foreground "red" :weight bold)
-                ("NEXT" :foreground "blue" :weight bold)
-                ("DONE" :foreground "forest green" :weight bold)
-                ("WAITING" :foreground "orange" :weight bold)
-                ("HOLD" :foreground "magenta" :weight bold)
-                ("CANCELLED" :foreground "forest green" :weight bold)
-                ("MEETING" :foreground "forest cyan" :weight bold)
-                ("PHONE" :foreground "blue" :weight bold)))))
+	(quote (("TODO" :foreground "red" :weight bold)
+		("NEXT" :foreground "blue" :weight bold)
+		("DONE" :foreground "forest green" :weight bold)
+		("WAITING" :foreground "orange" :weight bold)
+		("HOLD" :foreground "magenta" :weight bold)
+		("CANCELLED" :foreground "forest green" :weight bold)
+		("MEETING" :foreground "forest cyan" :weight bold)
+		("PHONE" :foreground "blue" :weight bold)))))
 #+END_SRC
 *** Пункты списка для org-mode
 #+BEGIN_SRC emacs-lisp
@@ -559,7 +562,7 @@
 #+BEGIN_SRC emacs-lisp
 ;;; Org-mode Setup
 (setq org-agenda-files (list
-                        "~/Documents/life.org"))
+			"~/Documents/life.org"))
 #+END_SRC
 *** Техника pomodoro
 #+BEGIN_SRC emacs-lisp
@@ -592,7 +595,7 @@
   (autoload 'lilypond "lilypond")
   (autoload 'lilypond-mode "lilypond-mode")
   (setq auto-mode-alist
-        (cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
+	(cons '("\\.ly$" . LilyPond-mode) auto-mode-alist))
   (add-hook 'LilyPond-mode-hook (lambda () (turn-on-font-lock))))
 
 ;;; Flycheck lilypond
@@ -701,12 +704,12 @@
 #+END_SRC
 *** Плавный скролл
 #+BEGIN_SRC emacs-lisp
-;; Smooth scrolling
-(setq redisplay-dont-pause nil
-  scroll-margin 10
-  scroll-step 1
-  scroll-conservatively 10000
-  scroll-preserve-screen-position 100)
+  ;; Smooth scrolling
+  ;; (setq redisplay-dont-pause nil
+  ;;   scroll-margin 10
+  ;;   scroll-step 1
+  ;;   scroll-conservatively 10000
+  ;;   scroll-preserve-screen-position 100)
 #+END_SRC
 ** Which-key
 #+BEGIN_SRC emacs-lisp
@@ -723,11 +726,7 @@
 ** Системные пакеты
 *** Guix
 #+BEGIN_SRC emacs-lisp
-  (use-package guix-autoloads
-  :after geiser
-  :config
-  (setq guix-repl-use-latest t)
-  (setq guix-guile-program "guile"))
+;;  (use-package guix-autoloads)
 
   (use-package edit-indirect)
   (use-package build-farm)
@@ -778,14 +777,9 @@
 ** PDF
 #+BEGIN_SRC emacs-lisp
   ;;; PDF Tools
-  ;; (use-package pdf-tools
-  ;;   :if window-system
-  ;;   :config (pdf-tools-install))
-#+END_SRC
-** Экспорт в HTML
-#+BEGIN_SRC emacs-lisp
-;;; Export to html
-(use-package htmlize)
+  (use-package pdf-tools
+    :if window-system
+    :config (pdf-tools-install))
 #+END_SRC
 ** Управление финансами
 #+BEGIN_SRC emacs-lisp

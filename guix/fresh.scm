@@ -1,8 +1,19 @@
 ;; This is an operating system configuration generated
 ;; by the graphical installer.
 
-(use-modules (gnu))
-(use-service-modules desktop networking ssh xorg)
+(use-modules (gnu)
+	     (srfi srfi-1))
+
+;;(use-modules (non-gnu packages lua-fennel))
+(use-service-modules
+ desktop
+ networking
+ ssh
+ xorg
+ sound
+ dbus
+ nix)
+(use-package-modules wm lisp bash fonts)
 
 (operating-system
  (locale "ru_RU.utf8")
@@ -25,34 +36,57 @@
 	       %base-user-accounts))
  (packages
   (append
-   (list (specification->package "ratpoison")
-	 (specification->package "xterm")
-	 (specification->package "nss-certs"))
+   (map specification->package
+	'("ratpoison"
+	  "xterm"
+	  "stumpwm"
+	  "nix"
+	  "nss-certs"
+	  "glibc-utf8-locales"
+	  "font-dejavu"
+	  "font-terminus"
+	  "font-fira-code"
+	  "font-fira-mono"))
+   (list sbcl stumpwm `(,stumpwm "lib"))
    %base-packages))
- (services
-  (append
-   (list (service xfce-desktop-service-type)
-	 (service openssh-service-type)
-	 (service tor-service-type)
-	 (set-xorg-configuration
-	  (xorg-configuration
-	   (keyboard-layout keyboard-layout))))
-   %desktop-services))
+
+ (services (cons*
+	    (service openssh-service-type)
+	    (service tor-service-type)
+
+	       ;;Wacom tablet support
+	    (service inputattach-service-type
+		     (inputattach-configuration
+		      (device "/dev/ttyS4")
+		      (device-type "wacom")))
+
+	    (extra-special-file "/bin/bash"
+				(file-append bash "/bin/bash"))
+
+	    (service nix-service-type)
+	    (set-xorg-configuration
+              (xorg-configuration
+                (keyboard-layout keyboard-layout)))
+	    %desktop-services))
+
  (bootloader
   (bootloader-configuration
    (bootloader grub-bootloader)
    (target "/dev/sda")
    (keyboard-layout keyboard-layout)))
- (mapped-devices
-  (list (mapped-device
-	 (source
-	  (uuid "84d2acc1-048c-4bae-b776-1f888c364a66"))
-	 (target "cryptroot")
-	 (type luks-device-mapping))))
+ (swap-devices (list "/dev/sda1"))
  (file-systems
-  (cons* (file-system
-	  (mount-point "/")
-	  (device "/dev/mapper/cryptroot")
-	  (type "ext4")
-	  (dependencies mapped-devices))
-	 %base-file-systems)))
+    (cons* (file-system
+             (mount-point "/")
+             (device
+               (uuid "c184f446-df67-4103-b28e-465ac8776f10"
+                     'ext4))
+             (type "ext4"))
+	   (file-system
+             (mount-point "/media/hdd/")
+             (device
+               (uuid "71cb0818-baf3-4f7f-8bc2-7e2b0cca3488"
+                     'ext4))
+             (type "ext4"))
+	   
+           %base-file-systems)))

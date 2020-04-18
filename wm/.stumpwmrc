@@ -1,15 +1,17 @@
 (in-package :stumpwm)
-(load "~/quicklisp/setup.lisp")
+;;(load "~/quicklisp/setup.lisp")
 
 (setq *startup-message* "Welcome to your lovely LISP-machine")
 
-;; Shepherd (with emacs daemon)
-(run-shell-command "shepherd")
-
 (set-prefix-key (kbd "C-t"))
 
-(set-module-dir "~/stumpwm/contrib")
-;;(ql:quickload :clx-truetype)
+(set-module-dir "~/.stumpwm.d/modules")
+
+(load-module :ttf-fonts)
+(setf xft:*font-dirs* '("/run/current-system/profile/share/fonts/"))
+(setf clx-truetype:+font-cache-filename+ (concat (getenv "HOME") "/.fonts/font-cache.sexp"))
+(xft:cache-fonts)
+(set-font (make-instance 'xft:font :family "Fira Code" :subfamily "Bold" :size 10.5))
 
 (load-module "battery-portable")
 (load-module "cpu")
@@ -18,22 +20,22 @@
 (load-module "clipboard-history")
 (load-module "shell-command-history")
 (load-module "app-menu")
+(load-module "swm-gaps")
 ;;(load-module "screenshot")
-;;(load-module "ttf-fonts")
 
 ;;(clx-truetype:cache-fonts)
 
 (print *time-modeline-string*)
 
 (setf *mode-line-pad-x* 8
-      *mode-line-pad-y* 2
+      *mode-line-pad-y* 0
       *mode-line-timeout* 1
       *mouse-focus-policy* :click
       *window-border-style* :thin
       *message-window-gravity* :center
       *normal-border-width* 0
       *mode-line-border-width* 1
-      *transient-border-width* 0
+      *transient-border-width* 1
       *mode-line-position* :top
       *time-modeline-string* "%d.%m.%y %k:%M"
       *window-format* "%m%n%s%t "
@@ -58,17 +60,13 @@
                                  "%d"
                                  ))
 
-
-;; launch Web browser
-;; (defcommand next () ()
-;;   "Start Next or switch to it, if it is already running."
-;;   (run-or-raise "next" '(:class "Next")))
-;; (define-key *root-map* (kbd "B") "next")
+(set-normal-gravity :top)
+(set-win-bg-color "#2d2d2d")
 
 (defcommand icecat () ()
-  "Start Next or switch to it, if it is already running."
-  (run-or-raise "icecat" '(:class "IceCat")))
-(define-key *root-map* (kbd "B") "icecat")
+	    "Start Next or switch to it, if it is already running."
+	    (run-or-raise "icecat" '(:class "IceCat")))
+(define-key *root-map* (kbd "b") "icecat")
 
 ;; launch terminal
 (defcommand urxvt () ()
@@ -81,9 +79,10 @@
 
 ;; Change emacs to emacsclient
 (defcommand emacsclient () ()
-  "Start Urxvt or switch to it, if it is already running."
   (run-or-raise "emacsclient -c -a emaces" '(:class "Emacs")))
-(define-key *root-map* (kbd "e") "emacsclient -c -a emaces")
+(defcommand emacs () ()
+  (run-or-raise "emacs" '(:class "Emacs")))
+  (define-key *root-map* (kbd "e") "emacs")
 
 ;; Volume Management
 (progn
@@ -91,19 +90,20 @@
   (define-key *top-map* (kbd "XF86AudioRaiseVolume") "exec amixer -q sset Master 3%+")
   (define-key *top-map* (kbd "XF86AudioMute") "amixer -q sset Master toggle"))
 
+;; Printscreen
+(defcommand printscreen () ()
+	    (message "Print screen region")
+	    (run-shell-command "xfce4-screenshooter"))
+	    
+(define-key *top-map* (kbd "SunPrint_Screen") "printscreen")
+
 ;; Mode-line
 (enable-mode-line (current-screen) (current-head) t)
 
-
 ;; Gaps
-(load-module "swm-gaps")
-(setf swm-gaps:*inner-gaps-size* 8)
-(setf swm-gaps:*outer-gaps-size* 4)
-;;(swm-gaps:toggle-gaps)
-
-;; Golden Ratio
-;;(load-module "swm-golden-ratio")
-;;(swm-golden-ratio:toggle-golden-ratio)
+;; (setf swm-gaps:*inner-gaps-size* 0)
+;; (setf swm-gaps:*outer-gaps-size* 2)
+;; (swm-gaps:toggle-gaps)
 
 (setf (getenv "GDK_CORE_DEVICE_EVENTS") "1")
 
@@ -121,25 +121,25 @@
 (replace-hook *key-press-hook* 'key-press-hook)
 
 ;; Clipboard history
-(define-key *root-map* (kbd "C-y") "show-clipboard-history")
-(clipboard-history:start-clipboard-manager)
+;; (define-key *root-map* (kbd "C-y") "show-clipboard-history")
+;; (clipboard-history:start-clipboard-manager)
 
 ;; Shell history
-(setf shell-command-history:*shell-command-history-file*
-      "/home/w96k/.cache/stumpwm/shell-command-history")
+;; (setf shell-command-history:*shell-command-history-file*
+;;       "/home/w96k/.cache/stumpwm/shell-command-history")
 
 ;; Menu
-(setq app-menu:*app-menu*
-      '(("Midnight Commander" "mc ~")
-        ("Telegram" "telegram-desktop")
-        ("Icecat" icecat)
-        ("Next" next)
-        ("Terminal" urxvt)
-        ("Deluge" "deluge")))
+;; (setq app-menu:*app-menu*
+;;       '(("Midnight Commander" "mc ~")
+;;         ("Telegram" "telegram-desktop")
+;;         ("Icecat" icecat)
+;;         ("Next" next)
+;;         ("Terminal" urxvt)
+;;         ("Deluge" "deluge")))
 
-(define-key *root-map* (kbd "q") "show-menu")
+;; (define-key *root-map* (kbd "q") "show-menu")
 
-;; Show / Hide mode-line
-(define-key *root-map* (kbd "M") "mode-line")
+;; ;; Show / Hide mode-line
+;; (define-key *root-map* (kbd "M") "mode-line")
 
 
