@@ -22,9 +22,9 @@ source /etc/bashrc
 # Adjust the prompt depending on whether we're in 'guix environment'.
 if [ -n "$GUIX_ENVIRONMENT" ]
 then
-    PS1='\u@\h \w [env]\$ '
+    PS1='\033[1;33m\]\w [env] \$ \033[0m'
 else
-    PS1='\u \w\$ '
+    PS1='\033[1;33m\]\w \$ \033[0m'
 fi
 alias ls='ls -p --color=auto'
 alias ll='ls -l'
