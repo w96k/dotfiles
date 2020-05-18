@@ -52,7 +52,7 @@
 ** Мод-лайн
 #+BEGIN_SRC emacs-lisp
 (custom-set-faces
- '(mode-line ((t (:background "#2d2d2d" :foreground "#cccccc" :box (:line-width 1 :color "#2d2d2d" :style released-button) :weight bold :height 1.0 :family "Fira Code")))))
+ '(mode-line ((t (:background "#333" :foreground "#cccccc" :box (:line-width 1 :color "#2d2d2d" :style released-button) :weight bold :height 1.0 :family "Fira Code")))))
 #+END_SRC
 ** Подсвечивать текущую строку
 #+BEGIN_SRC emacs-lisp
@@ -94,29 +94,11 @@
 ** SSH
 #+BEGIN_SRC emacs-lisp
 (use-package ssh-agency)
+(use-package pass)
 #+END_SRC
 ** Система контроля версий
-*** Magit
-Фронт для гита
-#+BEGIN_SRC emacs-lisp
-  ;;; Version control
-   (use-package magit
-     :ensure t
-     :pin melpa-stable
-     :bind ("C-x g" . magit-status)
-     :config
-     (setq magit-refresh-status-buffer nil)
-     (setq auto-revert-buffer-list-filter 'magit-auto-revert-repository-buffer-p)
-     (setq vc-handled-backends nil))
-#+END_SRC
-*** Git Flow
-#+BEGIN_SRC emacs-lisp
- ;;; Git flow
- (use-package magit-gitflow
-   :ensure t
-   :after magit
-   :init (add-hook 'magit-mode-hook 'turn-on-magit-gitflow))
-#+END_SRC
+   Я использую встроенный модуль VC
+   (VC > Magit)
 *** Пометки о модифицированных строках
      Если строка добавлена, удалена или отредактирована относительно
      текущего git проекта, то строка помечается зеленым, красным или
@@ -177,6 +159,7 @@
 
 #+BEGIN_SRC emacs-lisp
   (use-package ivy
+      :diminish
       :config
       (setq ivy-use-virtual-buffers t)
       (setq enable-recursive-minibuffers t)
@@ -266,20 +249,6 @@
 (electric-pair-mode)
 #+END_SRC
 
-** Сниппеты
-#+BEGIN_SRC emacs-lisp
-;;; Yasnippet
-(use-package yasnippet
-  :diminish
-  :defer
-  :config (yas-global-mode 1))
-
-(use-package yasnippet-snippets
-  :ensure t
-  :defer
-  :diminish
-  :after yasnippet)
-#+END_SRC
 ** Изменённое поведение биндов C-a и C-e
 #+BEGIN_SRC emacs-lisp
 ;;; Change Move to end & beginning of the line behavior
@@ -312,16 +281,16 @@
 ** Показывать пробелы
    Не работает
 #+BEGIN_SRC emacs-lisp
-(use-package whitespace
-  :config 
-  (progn
-  (setq whitespace-style (quote (face indentation indentation::space indentation::tab)))
-  (setq whitespace-space 'underline)
-    (setq whitespace-display-mappings
-	  '((space-mark 32 [183] [46])
-	    (tab-mark 9 [9655 9] [92 9])
-	    )))
-    (global-whitespace-mode))
+  ;; (use-package whitespace
+  ;;   :config 
+  ;;   (progn
+  ;;   (setq whitespace-style (quote (face indentation indentation::space indentation::tab)))
+  ;;   (setq whitespace-space 'underline)
+  ;;     (setq whitespace-display-mappings
+  ;; 	  '((space-mark 32 [183] [46])
+  ;; 	    (tab-mark 9 [9655 9] [92 9])
+  ;; 	    )))
+  ;;     (global-whitespace-mode))
 #+END_SRC
 * Языки программирования
 ** LISP
@@ -741,7 +710,6 @@
   :ensure-system-package docker
   :bind ("C-c d" . docker))
 #+END_SRC
-** Мультимедиа
 *** EMMS
 #+BEGIN_SRC elisp
   (use-package emms
