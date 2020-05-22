@@ -13,7 +13,7 @@
  sound
  dbus
  nix)
-(use-package-modules wm lisp bash fonts)
+(use-package-modules wm lisp bash fonts linux)
 
 (operating-system
  (locale "ru_RU.utf8")
@@ -25,6 +25,22 @@
    '("grp:win_space_toggle"
      "caps:ctrl_modifier"
      )))
+ (kernel linux-libre)
+ (kernel-arguments '("processor.max_cstate=1"  ; Disable power savings
+		     "intel_idle.max_cstate=2" ; (cstate 3-4 provides
+ 					; high freq cpu noice)
+		     "consoleblank=0"
+		     ;;"ahci.mobile_lpm_policy=1"
+		     "KVM"
+		     ;;"i915.enable_guc=-1"
+		     "i915.enable_dc=0" ; Disable cstate for gpu
+
+		     "intremap=off"     ; Fix for failed to map dmar2
+
+		     "logo.nologo"
+		     "loglevel=4"
+		     ))
+ (initrd-modules (append '("i915") %base-initrd-modules))
  (host-name "libreboot-x200t")
  (users (cons* (user-account
 		(name "w96k")
@@ -40,7 +56,6 @@
 	'("ratpoison"
 	  "xterm"
 	  "stumpwm"
-	  "nix"
 	  "nss-certs"
 	  "glibc-utf8-locales"
 	  "font-dejavu"
@@ -54,7 +69,7 @@
 	    (service openssh-service-type)
 	    (service tor-service-type)
 
-	       ;;Wacom tablet support
+	    ;;Wacom tablet support
 	    (service inputattach-service-type
 		     (inputattach-configuration
 		      (device "/dev/ttyS4")
@@ -63,10 +78,10 @@
 	    (extra-special-file "/bin/bash"
 				(file-append bash "/bin/bash"))
 
-	    (service nix-service-type)
+	    ;;(service nix-service-type)
 	    (set-xorg-configuration
-              (xorg-configuration
-                (keyboard-layout keyboard-layout)))
+	     (xorg-configuration
+	      (keyboard-layout keyboard-layout)))
 	    %desktop-services))
 
  (bootloader
@@ -76,17 +91,17 @@
    (keyboard-layout keyboard-layout)))
  (swap-devices (list "/dev/sda1"))
  (file-systems
-    (cons* (file-system
-             (mount-point "/")
-             (device
-               (uuid "c184f446-df67-4103-b28e-465ac8776f10"
-                     'ext4))
-             (type "ext4"))
-	   (file-system
-             (mount-point "/media/hdd/")
-             (device
-               (uuid "71cb0818-baf3-4f7f-8bc2-7e2b0cca3488"
-                     'ext4))
-             (type "ext4"))
-	   
-           %base-file-systems)))
+  (cons* (file-system
+	  (mount-point "/")
+	  (device
+	   (uuid "c184f446-df67-4103-b28e-465ac8776f10"
+		 'ext4))
+	  (type "ext4"))
+	 (file-system
+	  (mount-point "/media/hdd/")
+	  (device
+	   (uuid "71cb0818-baf3-4f7f-8bc2-7e2b0cca3488"
+		 'ext4))
+	  (type "ext4"))
+	 
+	 %base-file-systems)))

@@ -2,4 +2,4 @@
 
 (register-services emacs)
 (action 'shepherd 'daemonize) ; send shepherd into background
-(for-each start (list emacs))
+(for-each start (list emacs ssh-agent))
