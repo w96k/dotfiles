@@ -45,4 +45,8 @@
 (require 'diminish)
 (require 'bind-key)
 
+(setq custom-file "~/.emacs.d/custom-settings.el")
+(load custom-file t)
+
+;; Org File
 (org-babel-load-file "~/.emacs-config.org")
