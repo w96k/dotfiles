@@ -27,7 +27,7 @@
 
 (print *time-modeline-string*)
 
-(setf *mode-line-pad-x* 8
+(setf *mode-line-pad-x* 0
       *mode-line-pad-y* 0
       *mode-line-timeout* 1
       *mouse-focus-policy* :click
@@ -44,14 +44,13 @@
       *mode-line-background-color* "#2d2d2d"
       *startup-mode-line* t
       *window-name-source* :class
-      *delim* " ^2::^7 "
-      
+      *delim* " ^2::^7 "      
       *screen-mode-line-format* (list
                                  ;; Windows
                                  ;;"[^4%n^b]"
-                                 "^7%v  ^>^7"
+                                 "^7%v  ^>"
                                  ;; CPU
-                                 "%C" *delim*
+                                 "^7%C" *delim*
                                  ;; RAM
                                  "%M" *delim*
                                  ;; Battery

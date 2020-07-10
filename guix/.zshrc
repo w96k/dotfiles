@@ -14,3 +14,7 @@ compinit
 _comp_options+=(globdots)		# Include hidden files.
 
 #source /run/current-system/profile/etc/profile.d/nix.sh
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/w96k/.sdkman"
+[[ -s "/home/w96k/.sdkman/bin/sdkman-init.sh" ]] && source "/home/w96k/.sdkman/bin/sdkman-init.sh"

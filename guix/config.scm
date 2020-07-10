@@ -25,6 +25,7 @@
  docker)
 
 (use-package-modules
+ 
  hurd
  geo
  linux
@@ -92,8 +93,8 @@
 									      "https://berlin.guixsd.org")))))))
 
 ;; Remove gdm (gdm is default in guix)
- (set! %my-services
-   (remove (lambda (service)
+(set! %my-services
+  (remove (lambda (service)
  	    (eq? (service-kind service) gdm-service-type))
  	  %my-services))
 

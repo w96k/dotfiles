@@ -5,16 +5,16 @@
 # honor it and otherwise use /bin/sh.
 export SHELL
 
-if [[ $- != *i* ]]
-then
-    # We are being invoked from a non-interactive shell.  If this
-    # is an SSH session (as in "ssh host command"), source
-    # /etc/profile so we get PATH and other essential variables.
-    [[ -n "$SSH_CLIENT" ]] && source /etc/profile
+# if [[ $- != *i* ]]
 
-    # Don't do anything else.
-    return
-fi
+#    # We are being invoked from a non-interactive shell.  If this
+#    # is an SSH session (as in "ssh host command"), source
+#    # /etc/profile so we get PATH and other essential variables.
+#    [[ -n "$SSH_CLIENT" ]] && source /etc/profile
+
+#    # Don't do anything else.
+#    return
+# fi
 
 # Source the system-wide file.
 source /etc/bashrc
@@ -22,10 +22,17 @@ source /etc/bashrc
 # Adjust the prompt depending on whether we're in 'guix environment'.
 if [ -n "$GUIX_ENVIRONMENT" ]
 then
-    PS1='\033[1;33m\]\w [env] \$ \033[0m'
+    export PS1="\w [env] \$"
 else
-    PS1='\033[1;33m\]\w \$ \033[0m'
+    export PS1="\[$(tput bold; tput setaf 3;)\]\w \$ \[$(tput sgr0)\]"
 fi
 alias ls='ls -p --color=auto'
 alias ll='ls -l'
 alias grep='grep --color=auto'
+
+# Welcome message
+printf "Welcome to bash shell\n\n"
+
+# THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/w96k/.sdkman"
+[[ -s "/home/w96k/.sdkman/bin/sdkman-init.sh" ]] && source "/home/w96k/.sdkman/bin/sdkman-init.sh"
