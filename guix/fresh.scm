@@ -8,7 +8,7 @@
  xorg
  nix)
 
-(use-package-modules wm lisp bash)
+(use-package-modules wm lisp bash linux)
 
 (operating-system
  (locale "ru_RU.utf8")
@@ -20,9 +20,9 @@
    '("grp:win_space_toggle"
      "caps:ctrl_modifier"
      )))
- ;; (kernel linux-libre)
+ (kernel linux-libre)
  (kernel-arguments
-  '("processor.max_cstatpe=1"  ; Disable power savings
+  '("processor.max_cstate=1"  ; Disable power savings
     "intel_idle.max_cstate=2" ; (cstate 3-4 provides
 		     			; high freq cpu noice)
     "consoleblank=0"
@@ -62,6 +62,7 @@
       "font-fira-code"
       "font-fira-mono"
       "sbcl"
+      "nix"
       "stumpwm"))
    (list `(,stumpwm "lib"))
    %base-packages))

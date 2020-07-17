@@ -98,6 +98,7 @@ Version 2018-12-23"
      ;;   :hook (prog-mode . flymake-mode))
 
      (use-package flycheck
+	:bind (("C-c e" . flycheck-list-errors))
 	:config
 	(global-flycheck-mode))
    #+END_SRC
@@ -112,12 +113,16 @@ Version 2018-12-23"
 ** Дерево проекта
    #+BEGIN_SRC emacs-lisp
    (use-package treemacs
+   :bind (("C-x C-d" . treemacs))
      :ensure)
 
    (use-package lsp-treemacs
      :ensure
      :config
      (lsp-treemacs-sync-mode 1))
+
+   (use-package treemacs-projectile
+     :ensure)
    #+END_SRC
 ** Автоформатирование
    #+BEGIN_SRC emacs-lisp
@@ -134,8 +139,13 @@ Version 2018-12-23"
 :ensure)
    #+END_SRC
 ** Система контроля версий
-   Я использую встроенный модуль VC
+   Я стараюсь встроенный модуль VC
    (VC > Magit)
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package magit
+     :bind (("C-x g" . magit-status)))
+   #+END_SRC
 *** Пометки о модифицированных строках
     Если строка добавлена, удалена или отредактирована относительно
     текущего git проекта, то строка помечается зеленым, красным или
@@ -303,6 +313,7 @@ Version 2018-12-23"
    #+BEGIN_SRC emacs-lisp
 	(use-package lsp-mode
 	 :hook  (scala-mode . lsp)
+		(python-mode . lsp)
 		(lsp-mode . lsp-enable-which-key-integration)
 		(lsp-mode . lsp-lens-mode)
 	 :config (setq lsp-prefer-flymake nil))
@@ -561,26 +572,35 @@ Version 2018-12-23"
     #+END_SRC
 ** Org-mode
    #+BEGIN_SRC emacs-lisp
-;;; org
-(use-package org
-  :config
-  (setq org-default-notes-file (concat org-directory "~/Documents/life.org"))
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
+     ;;; org
+     (use-package org
+       :config
+       (setq org-default-notes-file (concat org-directory "~/Documents/life.org"))
+       (global-set-key (kbd "C-c l") 'org-store-link)
+       (global-set-key (kbd "C-c a") 'org-agenda)
+       (global-set-key (kbd "C-c c") 'org-capture)
 
-  (setq org-todo-keywords
-	(quote ((sequence "TODO(t)" "MIGRATE(m)" "|" "DONE(d)")
-		(sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-  (setq org-todo-keyword-faces
-	(quote (("TODO" :foreground "red" :weight bold)
-		("NEXT" :foreground "blue" :weight bold)
-		("DONE" :foreground "forest green" :weight bold)
-		("WAITING" :foreground "orange" :weight bold)
-		("HOLD" :foreground "magenta" :weight bold)
-		("CANCELLED" :foreground "forest green" :weight bold)
-		("MEETING" :foreground "forest cyan" :weight bold)
-		("PHONE" :foreground "blue" :weight bold)))))
+       (setq org-use-speed-commands t
+	     org-return-follows-link t
+	     org-hide-emphasis-markers t
+	     org-completion-use-ido t
+	     org-outline-path-complete-in-steps nil
+	     org-src-fontify-natively t
+	     org-src-tab-acts-natively t
+	     org-confirm-babel-evaluate nil)
+
+       (setq org-todo-keywords
+	     (quote ((sequence "TODO(t)" "MIGRATE(m)" "|" "DONE(d)")
+		     (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
+       (setq org-todo-keyword-faces
+	     (quote (("TODO" :foreground "red" :weight bold)
+		     ("NEXT" :foreground "blue" :weight bold)
+		     ("DONE" :foreground "forest green" :weight bold)
+		     ("WAITING" :foreground "orange" :weight bold)
+		     ("HOLD" :foreground "magenta" :weight bold)
+		     ("CANCELLED" :foreground "forest green" :weight bold)
+		     ("MEETING" :foreground "forest cyan" :weight bold)
+		     ("PHONE" :foreground "blue" :weight bold)))))
    #+END_SRC
 *** Пункты списка для org-mode
     #+BEGIN_SRC emacs-lisp
@@ -592,6 +612,7 @@ Version 2018-12-23"
 *** Агенда
     #+BEGIN_SRC emacs-lisp
 ;;; Org-mode Setup
+
 (setq org-agenda-files (list
 			"~/Documents/life.org"))
     #+END_SRC
@@ -661,7 +682,7 @@ Version 2018-12-23"
 (use-package org-mime
   :ensure)
      #+END_SRC
-*** GNUPG
+v*** GNUPG
 **** Ввод ключей
      #+BEGIN_SRC emacs-lisp
 ;;; Dialog program for entering password
@@ -743,6 +764,7 @@ Version 2018-12-23"
   :ensure
   :hook (window-setup-hook . maximize-frame))
    #+END_SRC
+
 ** Which-key
    #+BEGIN_SRC emacs-lisp
   (use-package which-key

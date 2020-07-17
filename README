@@ -5,8 +5,7 @@ Here you can find my dotfiles for various of unix programs.
 
 ** GUIX
    I use guixsd as my primary linux distro. It's GNU (totally libre),
-   extensible by GNU/Guile & based on nix package manager. Nix is the
-   future of package management.
+   extensible by GNU/Guile & based on nix package manager.
 
    [[config.scm][My config]]
 
@@ -14,8 +13,9 @@ Here you can find my dotfiles for various of unix programs.
 [[emacs.png]]
 
 *** My setup
-| Font  | terminus                    |
-| Theme | sanityinc-tomorrow-eighties |
+| Emacs version | 27                          |
+| Font          | Fira Code                   |
+| Theme         | sanityinc-tomorrow-eighties |
 
 
 | use-package            | Package management                         |
@@ -23,9 +23,8 @@ Here you can find my dotfiles for various of unix programs.
 | aggressive indent mode | Auto formatting for code                   |
 | magit                  | Git frontend                               |
 | org-mode               | Mode for writing documents & more          |
-| exwm                   | Window manager within emacs                |
 | flycheck               | Spot code errors on the fly                |
-| powerline              |                                            |
+| treemacs               | Fancy file manager in sidebar like in IDE  |
 
 And many more! I left comments in my config, so you can get idea what
 packages do.

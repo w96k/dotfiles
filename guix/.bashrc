@@ -33,6 +33,8 @@ alias grep='grep --color=auto'
 # Welcome message
 printf "Welcome to bash shell\n\n"
 
+alias python=python3
+
 # THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/home/w96k/.sdkman"
 [[ -s "/home/w96k/.sdkman/bin/sdkman-init.sh" ]] && source "/home/w96k/.sdkman/bin/sdkman-init.sh"
